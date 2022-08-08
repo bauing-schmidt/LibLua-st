@@ -66,7 +66,7 @@ LibLua >> appendOnLuaRepositoryOnPackagePathOf: state [
 	^ self
 		  luaL: state
 		  dostring:
-		  'package.path = package.path .. ";./pharo-local/iceberg/massimo-nocentini/on-lua/src/?.lua"'
+		  'package.path = package.path .. ";./lua/?.lua"'
 ]
 
 { #category : #API }
@@ -1038,7 +1038,7 @@ $(LUA_A): $(BASE_O)
 { #category : #'accessing platform' }
 LibLua >> win32LibraryName [
 
-	^ FFIWindowsLibraryFinder findAnyLibrary: #( 'lua-lib/lua54.dll' )
+	^ FFIWindowsLibraryFinder findAnyLibrary: #( 'lua/lib/lua54.dll' )
 ]
 
 { #category : #API }

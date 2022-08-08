@@ -426,9 +426,9 @@ LibLuaTest >> testHeapBench [
 	smalltalkTimeToRun := [ Heap withAll: array ] timeToRun.
 	"pythonTimeToRun := [ CTHeapQ new heapify: array ] timeToRun."
 
-	self
+"	self
 		assert: luaTimeToRun < smalltalkTimeToRun;
-		assert: luaTimeToRun < kleinbergTardosTimeToRun ";
+		assert: luaTimeToRun < kleinbergTardosTimeToRun ;
 		assert: smalltalkTimeToRun < pythonTimeToRun"
 ]
 
@@ -750,7 +750,7 @@ LibLuaTest >> testSearchPath [
 		            self liblua
 			            luaL: state
 			            loadstring:
-				            'return package.searchpath("io.github.massimo-nocentini.on-lua.heapq", "./pharo-local/iceberg/massimo-nocentini/on-lua/src/?.lua")';
+				            'return package.searchpath("io.github.massimo-nocentini.on-lua.heapq", "./lua/?.lua")';
 			            lua: state pcallnargs: 0 nresults: 1.
 
 		            self liblua lua: state tostring: -1 ].
@@ -758,7 +758,7 @@ LibLuaTest >> testSearchPath [
 	self
 		assert: pathName asFileReference
 		equals:
-			'./pharo-local/iceberg/massimo-nocentini/on-lua/src/io/github/massimo-nocentini/on-lua/heapq.lua'
+			'./lua/io/github/massimo-nocentini/on-lua/heapq.lua'
 				asFileReference
 ]
 
