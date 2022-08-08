@@ -1038,7 +1038,7 @@ $(LUA_A): $(BASE_O)
 { #category : #'accessing platform' }
 LibLua >> win32LibraryName [
 
-	^ FFIWindowsLibraryFinder findAnyLibrary: #( 'lib/lua54.dll' )
+	^ FFIWindowsLibraryFinder findAnyLibrary: #( 'lua-lib/lua54.dll' )
 ]
 
 { #category : #API }
