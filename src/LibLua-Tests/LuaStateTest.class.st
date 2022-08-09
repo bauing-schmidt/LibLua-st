@@ -22,9 +22,76 @@ LuaStateTest >> averageAndSum: lua [
 ]
 
 { #category : #tests }
+LuaStateTest >> commandsLuaSource [
+
+	^ '
+
+commands = {
+	command { "create", 
+		{ 
+			command { "document" }, 
+		  	command { "folder" }
+		} 
+	},
+	command { "delete" },
+}
+
+'
+]
+
+{ #category : #tests }
 LuaStateTest >> liblua [
 
 	^ LibLua uniqueInstance
+]
+
+{ #category : #tests }
+LuaStateTest >> pushCommandTableOnLua: lua random: random acc: aKey [
+
+	"According to https://stackoverflow.com/questions/20147027/creating-a-simple-table-with-lua-tables-c-api"
+
+	| s name |
+	lua checkTypeAt: 1 equals: #LUA_TTABLE.
+
+	lua pushNewTable.
+
+	name := lua getFieldAt: 1 ofValueAt: -2.
+	self assert: name equals: (lua typeIdOfTypeName: #LUA_TSTRING).
+	lua setField: 'name' ofValueAt: -2.
+
+	s := random next.
+	aKey key: aKey key + s.
+
+	lua 
+		push: s;
+		setField: 'context' ofValueAt: -2.
+	
+	lua 
+		getFieldAt: 2 ofValueAt: -2;
+		getField: 'followups' ofValueAt: -2.
+
+	lua 
+		push: 'noop';
+		setField: 'action' ofValueAt: -2.
+
+	^ 1 "number of results"
+]
+
+{ #category : #tests }
+LuaStateTest >> recSumLuaSource [
+
+	^ '
+
+function recSum (tbl) 
+	r = 0.0
+	for _, c in ipairs(tbl) do
+		print(c.name)
+		r = r + c.context + recSum (c.followups or {})
+	end
+	return r
+end
+
+'
 ]
 
 { #category : #tests }
@@ -51,6 +118,34 @@ LuaStateTest >> testCFunctionAverage [
 	self
 		assert: avg equals: { 12. 43. 43. 450 } average;
 		assert: sum equals: { 12. 43. 43. 450 } sum
+]
+
+{ #category : #tests }
+LuaStateTest >> testCommandsUsingLuaAPI [
+
+	| result random r |
+	random := Random seed: 541.
+
+	"The following lookupkey is necessary to keep the sum of
+	 random numbers generated call after call."
+	r := LookupKey new
+		     key: 0.0;
+		     yourself.
+
+	result := self liblua do: [ :lua | 
+		          lua
+			          push: [ :ongoingState | 
+				          self
+					          pushCommandTableOnLua: lua
+					          random: random
+					          acc: r ];
+			          setGlobal: 'command';
+			          do: self recSumLuaSource;
+			          do: self commandsLuaSource;
+			          executePushingOne: 'return recSum(commands)';
+			         	numberAt: -1 ifNotNumber: [ Error signal ] ].
+
+	self assert: result equals: r key
 ]
 
 { #category : #tests }

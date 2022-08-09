@@ -16,6 +16,24 @@ LuaState >> addGlobal: anObject as: aName [
 ]
 
 { #category : #accessing }
+LuaState >> checkTypeAt: anIndex equals: typeName [ 
+
+	^ self liblua
+		luaL: self externalAddress
+		check: anIndex
+		type: (self typeIdOfTypeName: typeName)
+]
+
+{ #category : #accessing }
+LuaState >> checkTypeAt: anIndex equalsId: typeId [ 
+
+	^ self liblua
+		luaL: self externalAddress
+		check: anIndex
+		type: typeId
+]
+
+{ #category : #accessing }
 LuaState >> compareAt: index1 toValueAt: index2 [
 
 	^ self liblua lua: self externalAddress compare: index1 eq: index2
@@ -84,6 +102,12 @@ LuaState >> externalAddress: anObject [
 LuaState >> getField: fieldName ofValueAt: anIndex [
 
 	^ self liblua lua: self externalAddress get: anIndex field: fieldName
+]
+
+{ #category : #accessing }
+LuaState >> getFieldAt: anIndex ofValueAt: valueIndex [
+
+	^ self liblua lua: self externalAddress get: valueIndex i: anIndex
 ]
 
 { #category : #accessing }
@@ -167,6 +191,12 @@ LuaState >> push: anObject [
 ]
 
 { #category : #accessing }
+LuaState >> pushNewTable [ 
+
+	self liblua lua_newtable: self externalAddress.
+]
+
+{ #category : #accessing }
 LuaState >> pushNil [
 
 	self liblua lua_pushnil: self externalAddress
@@ -216,6 +246,12 @@ LuaState >> require: packageName as: aName [
 		  aName , ' = require "', packageName, '"'
 ]
 
+{ #category : #accessing }
+LuaState >> setField: fieldName ofValueAt: anIndex [
+
+	^ self liblua lua: self externalAddress set: anIndex field: fieldName
+]
+
 { #category : #private }
 LuaState >> setGlobal: aString [ 
 
@@ -240,6 +276,12 @@ LuaState >> tableAt: anIndex do: aBlock [
 LuaState >> typeIdOf: anObject [ 
 
 	^ self liblua lua:  self externalAddress type: anObject
+]
+
+{ #category : #accessing }
+LuaState >> typeIdOfTypeName: typeName [ 
+
+	^ self liblua typeAt: typeName
 ]
 
 { #category : #accessing }
