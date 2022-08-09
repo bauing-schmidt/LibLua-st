@@ -70,6 +70,19 @@ LibLua >> appendOnLuaRepositoryOnPackagePathOf: state [
 ]
 
 { #category : #API }
+LibLua >> do: aBlock [ 
+
+	self withOpenedLibsStateDo: [ :stateAddr | 
+		| state |
+		state := LuaState new
+			externalAddress: stateAddr;
+			liblua: self;
+			yourself.
+		aBlock value: state.
+	]
+]
+
+{ #category : #API }
 LibLua >> ffiCallback: aBlock [
 
 	^ FFICallback signature: #( int #( const void * a ) ) block: aBlock

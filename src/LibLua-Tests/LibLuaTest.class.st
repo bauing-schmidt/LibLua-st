@@ -157,7 +157,8 @@ LibLuaTest >> testCFunctionAverage [
 	| avg sum |
 	self liblua withOpenedLibsStateDo: [ :state | 
 		| average |
-		average := self liblua ffiCallback: [ :s | self average: s ].
+		average := self liblua ffiCallback: [ :s |
+			 self average: s ].
 
 		self liblua lua: state register: 'foo' cfunction: average.
 
