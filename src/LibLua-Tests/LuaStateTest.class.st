@@ -42,8 +42,7 @@ LuaStateTest >> testCFunctionAverage [
 		lua pushNil. 
 		lua pushString: 'hello'.
 
-		lua load: 'return foo(12, 43, 43, 450)'.
-		lua protectedCallArgumentsCount: 0 resultsCount: 2. 
+		lua executePushingTwo: 'return foo(12, 43, 43, 450)'.
 
 		avg := lua numberAt: -2.
 		sum := lua numberAt: -1.
@@ -52,4 +51,52 @@ LuaStateTest >> testCFunctionAverage [
 	self
 		assert: avg equals: { 12. 43. 43. 450 } average;
 		assert: sum equals: { 12. 43. 43. 450 } sum
+]
+
+{ #category : #tests }
+LuaStateTest >> testLuaSeti [
+
+	| list random array |
+	random := Random seed: 541.
+	array := (1 to: 100) asArray shuffleBy: random.
+
+	list := self liblua do: [ :lua | 
+			lua addGlobal: array as: 'array'.
+			lua executePushingOne: 'return  table.concat(array, " ")'.
+			lua stringAt: -1. ].
+
+	self assert: '#(' , list , ')' equals: array asString
+]
+
+{ #category : #tests }
+LuaStateTest >> testNewCloseState [
+
+	| three |
+	three := self liblua do: [ :lua | 
+		         self deny: lua externalAddress equals: ExternalAddress null.
+		         3 ].
+
+	self assert: three equals: 3
+]
+
+{ #category : #tests }
+LuaStateTest >> testReadFromArray [
+
+	self liblua do: [ :lua | 
+		| result |
+		result := lua execute: 'return {1, 2, 3, 4, 5}'.
+		self assert: result equals: #( 1 2 3 4 5 ).
+
+		result := lua execute: 'return {1, {1, 2, 3, 4, 5}, 3, 4, 5}'.
+		self assert: result equals:  #( 1 #( 1 2 3 4 5 ) 3 4 5 ).
+
+		result := lua execute: 'return {[-1]=1, 2, nil, [100]=4, 5}'.
+		self assert: result equals: (Dictionary new
+				 at: -1 put: 1;
+				 at: 1 put: 2;
+				 at: 100 put: 4;
+				 at: 3 put: 5;
+				 yourself).
+	].
+
 ]

@@ -72,7 +72,7 @@ LibLua >> appendOnLuaRepositoryOnPackagePathOf: state [
 { #category : #API }
 LibLua >> do: aBlock [ 
 
-	self withOpenedLibsStateDo: [ :stateAddr | 
+	^ self withOpenedLibsStateDo: [ :stateAddr | 
 		| state |
 		state := LuaState new
 			externalAddress: stateAddr;
