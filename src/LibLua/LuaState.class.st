@@ -41,7 +41,7 @@ LuaState >> execute: aString resultsCount: resultsCount [
 { #category : #accessing }
 LuaState >> executePushingNone: aString [ 
 
-	self execute: aString resultsCount: 0
+	^ self execute: aString resultsCount: 0
 ]
 
 { #category : #accessing }
@@ -53,7 +53,7 @@ LuaState >> executePushingOne: aString [
 { #category : #accessing }
 LuaState >> executePushingTwo: aString [ 
 
-	self execute: aString resultsCount: 2
+	^ self execute: aString resultsCount: 2
 ]
 
 { #category : #accessing }
@@ -72,6 +72,12 @@ LuaState >> externalAddress: anObject [
 LuaState >> getTop [
 
 	^ self liblua lua_gettop: externalAddress
+]
+
+{ #category : #accessing }
+LuaState >> integerAt: anIndex ifNotInteger: aBlock [
+
+	^ self liblua lua: self externalAddress tointegerx: anIndex ifNotInteger: aBlock
 ]
 
 { #category : #accessing }

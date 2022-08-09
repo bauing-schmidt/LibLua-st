@@ -54,6 +54,124 @@ LuaStateTest >> testCFunctionAverage [
 ]
 
 { #category : #tests }
+LuaStateTest >> testLoadThenPCall [
+
+	| code |
+	self liblua do: [ :lua | 
+		code := lua executePushingNone: 'do a = 3 + 4; print("The result is: ", a) end'.
+	].
+
+	self assert: code equals: 0
+]
+
+{ #category : #tests }
+LuaStateTest >> testLoadThenPCallThenToString [
+
+	| code error |
+	self liblua do: [ :lua | 
+		code := lua executePushingNone: '(function (a, b) return error("hello") end) (3, 4)'.
+		error := lua stringAt: -1
+	].
+
+	self assert: code equals: 2.
+	self
+		assert: error
+		equals:
+		'[string "(function (a, b) return error("hello") end) (..."]:1: hello'
+]
+
+{ #category : #tests }
+LuaStateTest >> testLoadThenPCallWithReturnInteger [
+
+	| code seven |
+	self liblua do: [ :lua | 
+		code := lua executePushingOne: 'do a = 3 + 4; print("The result is: ", a); return a + 1 end'.
+		seven := lua integerAt: -1 ifNotInteger: [ Error signal ].
+	].
+
+	self
+		assert: code equals: 0;
+		assert: seven equals: 8
+]
+
+{ #category : #tests }
+LuaStateTest >> testLoadThenPCallWithReturnIntegerFail [
+
+	| code seven witness |
+	witness := Object new.
+
+	self liblua do: [ :lua | 
+		code := lua executePushingOne: 'do a = 3 + 4; print("The result is: ", a); return "just a simple string" end'.
+		seven := lua integerAt: -1 ifNotInteger: [ witness ].
+	].
+
+	self
+		assert: code equals: 0;
+		assert: seven equals: witness
+]
+
+{ #category : #tests }
+LuaStateTest >> testLoadThenPCallWithReturnIntegerInString [
+
+	| code seven |
+
+	self liblua do: [ :lua | 
+		code := lua executePushingOne: 'do a = 3 + 4; print("The result is: ", a); return tostring(a + 1) end'.
+		seven := lua integerAt: -1 ifNotInteger: [ Error signal ].
+	].
+
+	self
+		assert: code equals: 0;
+		assert: seven equals: 8
+]
+
+{ #category : #tests }
+LuaStateTest >> testLoadThenPCallWithReturnNumber [
+
+	| code seven |
+
+	self liblua do: [ :lua | 
+		code := lua executePushingOne: 'do a = 3 + 4.2; print("The result is: ", a); return a + 1 end'.
+		seven := lua numberAt: -1 ifNotNumber: [ Error signal ].
+	].
+
+	self
+		assert: code equals: 0;
+		assert: seven equals: 8.2
+]
+
+{ #category : #tests }
+LuaStateTest >> testLoadThenPCallWithReturnNumberFail [
+
+	| code seven witness |
+	witness := Object new.
+
+	self liblua do: [ :lua | 
+		code := lua executePushingOne: 'do a = 3 + 4; print("The result is: ", a); return "just a simple string" end'.
+		seven := lua numberAt: -1 ifNotNumber: [ witness ].
+	].
+
+	self
+		assert: code equals: 0;
+		assert: seven equals: witness
+]
+
+{ #category : #tests }
+LuaStateTest >> testLoadThenPCallWithReturnString [
+
+	| code seven |
+
+	self liblua do: [ :lua | 
+		code := lua executePushingOne: 'do a = 3 + 4; print("The result is: ", a); return tostring(a) .. " hello " end'.
+		seven := lua stringAt: -1.
+	].
+
+	self
+		assert: code equals: 0;
+		assert: seven equals: '7 hello '
+]
+
+{ #category : #tests }
 LuaStateTest >> testLuaSeti [
 
 	| list random array |
@@ -157,24 +275,19 @@ LuaStateTest >> testReadFromString [
 { #category : #tests }
 LuaStateTest >> testReadFromTable [
 
-	| list |
-
 	self liblua do: [ :lua | 
-		
-		lua registerPath: './lua'.
-		lua require: 'io.github.massimo-nocentini.on-lua.operator' as: 'op'.
-		lua require: 'io.github.massimo-nocentini.on-lua.extensions'.
-
-		list := lua
-			do: 'list = {5, 4, 3, 2, 1}';
-			do: 'print(table.contains)';
-			do: 'print(op.increment)';
-			do: 'print(coroutine.zip)';
-			do: 'list = table.map(list, op.increment)';
-			execute: 'return table.concat(list, ", ")'.
-	].
-
-	self assert: list equals: '6, 5, 4, 3, 2'
+		| result |
+		result := lua 
+			do: 'tbl = {1, 4}';
+			do: 'tbl[{}] = "hello"';
+			do: 'tbl[true] = { 1 }';
+			execute: 'return tbl'.
+		self assert: result equals: (Dictionary new
+				 at: 1 put: 1;
+				 at: 2 put: 4;
+				 at: #(  ) put: 'hello';
+				 at: true put: #( 1 );
+				 yourself) ]
 ]
 
 { #category : #tests }
@@ -208,4 +321,27 @@ LuaStateTest >> testSetGlobalMySinAsCallback [
 		assert: code equals: 0;
 		assert: called;
 		assert: result equals: 3 sin
+]
+
+{ #category : #tests }
+LuaStateTest >> testTableMap [
+
+	| list |
+
+	self liblua do: [ :lua | 
+		
+		lua registerPath: './lua'.
+		lua require: 'io.github.massimo-nocentini.on-lua.operator' as: 'op'.
+		lua require: 'io.github.massimo-nocentini.on-lua.extensions'.
+
+		list := lua
+			do: 'list = {5, 4, 3, 2, 1}';
+			do: 'print(table.contains)';
+			do: 'print(op.increment)';
+			do: 'print(coroutine.zip)';
+			do: 'list = table.map(list, op.increment)';
+			execute: 'return table.concat(list, ", ")'.
+	].
+
+	self assert: list equals: '6, 5, 4, 3, 2'
 ]
