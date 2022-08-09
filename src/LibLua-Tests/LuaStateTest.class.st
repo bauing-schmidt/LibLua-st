@@ -66,7 +66,7 @@ LuaStateTest >> testCopy [
 			do: 'tbl[ { } ] = 2';
 			getGlobal: 'tbl';
 			pushNil;
-			copy: -2 to: -1;
+			copyFrom: -2 to: -1;
 			tableAt: -1 do: [ :k :v | 
 				| keyType valueType |
 				keyType := lua typeNameOf: k.
@@ -86,6 +86,28 @@ LuaStateTest >> testCopy [
 				 yourself);
 		assert: result equals: original;
 		assert: result size equals: 3
+]
+
+{ #category : #tests }
+LuaStateTest >> testCopyCompare [
+
+	| outer inner |
+	self liblua do: [ :lua | 
+		outer := lua 
+			do: 'tbl = { nested = { } }';
+			getGlobal: 'tbl';
+			pushNil;
+			copyFrom: -2 to: -1;
+			compareAt: -2 toValueAt: -1.
+
+		inner := lua
+			getField: 'nested' ofValueAt: -2; 
+			getField: 'nested' ofValueAt: -2; 
+			compareAt: -1 toValueAt: -2. ].
+
+	self
+		assert: outer equals: 1;
+		assert: inner equals: 1
 ]
 
 { #category : #tests }

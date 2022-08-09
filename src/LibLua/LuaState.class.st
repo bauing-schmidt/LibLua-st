@@ -16,7 +16,13 @@ LuaState >> addGlobal: anObject as: aName [
 ]
 
 { #category : #accessing }
-LuaState >> copy: fromIndex to: toIndex [
+LuaState >> compareAt: index1 toValueAt: index2 [
+
+	^ self liblua lua: self externalAddress compare: index1 eq: index2
+]
+
+{ #category : #accessing }
+LuaState >> copyFrom: fromIndex to: toIndex [
 
 	^ self liblua lua: self externalAddress copy: fromIndex to: toIndex
 ]
@@ -72,6 +78,12 @@ LuaState >> externalAddress [
 LuaState >> externalAddress: anObject [
 
 	externalAddress := anObject
+]
+
+{ #category : #accessing }
+LuaState >> getField: fieldName ofValueAt: anIndex [
+
+	^ self liblua lua: self externalAddress get: anIndex field: fieldName
 ]
 
 { #category : #accessing }
