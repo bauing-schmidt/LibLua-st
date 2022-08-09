@@ -54,6 +54,41 @@ LuaStateTest >> testCFunctionAverage [
 ]
 
 { #category : #tests }
+LuaStateTest >> testCopy [
+
+	| result original |
+	result := Set new.
+	original := Set new.
+
+	self liblua do: [ :lua | 
+		lua
+			do: 'tbl = { hello = 3.14, "!" }';
+			do: 'tbl[ { } ] = 2';
+			getGlobal: 'tbl';
+			pushNil;
+			copy: -2 to: -1;
+			tableAt: -1 do: [ :k :v | 
+				| keyType valueType |
+				keyType := lua typeNameOf: k.
+				valueType := lua typeNameOf: v.
+				result add: keyType -> valueType ];
+			tableAt: -2 do: [ :k :v | 
+				| keyType valueType |
+				keyType := lua typeNameOf: k.
+				valueType := lua typeNameOf: v.
+				original add: keyType -> valueType ] ].
+
+	self
+		assert: result equals: (Set new
+				 add: 'number' -> 'string';
+				 add: 'table' -> 'number';
+				 add: 'string' -> 'number';
+				 yourself);
+		assert: result equals: original;
+		assert: result size equals: 3
+]
+
+{ #category : #tests }
 LuaStateTest >> testLoadThenPCall [
 
 	| code |

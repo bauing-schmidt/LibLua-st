@@ -16,6 +16,12 @@ LuaState >> addGlobal: anObject as: aName [
 ]
 
 { #category : #accessing }
+LuaState >> copy: fromIndex to: toIndex [
+
+	^ self liblua lua: self externalAddress copy: fromIndex to: toIndex
+]
+
+{ #category : #accessing }
 LuaState >> do: aString [
 
 	^ self liblua luaL: self externalAddress dostring: aString
@@ -66,6 +72,12 @@ LuaState >> externalAddress [
 LuaState >> externalAddress: anObject [
 
 	externalAddress := anObject
+]
+
+{ #category : #accessing }
+LuaState >> getGlobal: aName [ 
+
+	self liblua lua: self externalAddress getglobal: aName.
 ]
 
 { #category : #accessing }
@@ -120,6 +132,14 @@ LuaState >> on: functionName do: aBlock [
 	 ].
 
 	self liblua lua: self externalAddress register: functionName cfunction: callback.	
+]
+
+{ #category : #private }
+LuaState >> privTypeNameOf: luaTypeId [ 
+
+	^ self liblua
+			lua: self externalAddress
+			typename: luaTypeId
 ]
 
 { #category : #accessing }
@@ -196,4 +216,22 @@ LuaState >> setGlobal: aString [
 LuaState >> stringAt: anIndex [ 
 
 	^ self liblua lua: self externalAddress tostring: anIndex
+]
+
+{ #category : #accessing }
+LuaState >> tableAt: anIndex do: aBlock [
+
+	self liblua table: self externalAddress at: anIndex do: aBlock
+]
+
+{ #category : #accessing }
+LuaState >> typeIdOf: anObject [ 
+
+	^ self liblua lua:  self externalAddress type: anObject
+]
+
+{ #category : #accessing }
+LuaState >> typeNameOf: anObject [ 
+
+	^ self privTypeNameOf: (self typeIdOf: anObject)
 ]
