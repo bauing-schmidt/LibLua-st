@@ -100,3 +100,112 @@ LuaStateTest >> testReadFromArray [
 	].
 
 ]
+
+{ #category : #tests }
+LuaStateTest >> testReadFromBoolean [
+
+	self liblua do: [ :lua | 
+		| result |
+		result := lua execute: 'return false'.
+		self deny: result.
+
+		result := lua execute: 'return true'.
+		self assert: result.
+	]
+]
+
+{ #category : #tests }
+LuaStateTest >> testReadFromInteger [
+
+	self liblua do: [ :lua | 
+		| result |
+		result := lua execute: 'return 12345'.
+		self assert: result equals: 12345
+	]
+]
+
+{ #category : #tests }
+LuaStateTest >> testReadFromNil [
+
+	self liblua do: [ :lua | 
+		| result |
+		result := lua execute: 'return nil'.
+		self assert: result equals: nil
+	]
+]
+
+{ #category : #tests }
+LuaStateTest >> testReadFromNumber [
+
+	self liblua do: [ :lua | 
+		| result |
+		result := lua execute: 'return 12345.1'.
+		self assert: result equals: 12345.1
+	]
+]
+
+{ #category : #tests }
+LuaStateTest >> testReadFromString [
+
+	self liblua do: [ :lua | 
+		| result |
+		result := lua execute: 'return "nil"'.
+		self assert: result equals: 'nil'
+	]
+]
+
+{ #category : #tests }
+LuaStateTest >> testReadFromTable [
+
+	| list |
+
+	self liblua do: [ :lua | 
+		
+		lua registerPath: './lua'.
+		lua require: 'io.github.massimo-nocentini.on-lua.operator' as: 'op'.
+		lua require: 'io.github.massimo-nocentini.on-lua.extensions'.
+
+		list := lua
+			do: 'list = {5, 4, 3, 2, 1}';
+			do: 'print(table.contains)';
+			do: 'print(op.increment)';
+			do: 'print(coroutine.zip)';
+			do: 'list = table.map(list, op.increment)';
+			execute: 'return table.concat(list, ", ")'.
+	].
+
+	self assert: list equals: '6, 5, 4, 3, 2'
+]
+
+{ #category : #tests }
+LuaStateTest >> testSetGlobalMySinAsCallback [
+
+	| code result called |
+	called := false.
+
+	self liblua do: [ :lua | 
+		lua addGlobal: [ :ongoingState | 
+				| number |
+				called := true.
+				self assert: ongoingState equals: lua externalAddress.
+
+				number := self liblua luaL:  lua externalAddress checknumber: 1.
+
+				self liblua push: number sin on: ongoingState.
+
+				1 "number of results" ]
+		as: 'mysin'.
+
+		code := lua executePushingOne: 'return mysin(3)'.
+
+"		self liblua luaL:  lua externalAddress loadstring: 'return mysin(3)'.
+		code := self liblua lua:  lua externalAddress pcallnargs: 0 nresults: 1.
+"
+
+		result := lua numberAt: -1 ifNotNumber: [ Error signal ] ].
+
+	self
+		assert: code equals: 0;
+		assert: called;
+		assert: result equals: 3 sin
+]

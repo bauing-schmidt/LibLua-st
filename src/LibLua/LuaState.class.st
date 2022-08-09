@@ -16,6 +16,12 @@ LuaState >> addGlobal: anObject as: aName [
 ]
 
 { #category : #accessing }
+LuaState >> do: aString [
+
+	^ self liblua luaL: self externalAddress dostring: aString
+]
+
+{ #category : #accessing }
 LuaState >> execute: aString [ 
 
 	"one returned object"
@@ -28,7 +34,7 @@ LuaState >> execute: aString [
 LuaState >> execute: aString resultsCount: resultsCount [
 
 	self load: aString.
-	self protectedCallArgumentsCount: 0 resultsCount: resultsCount. 
+	^ self protectedCallArgumentsCount: 0 resultsCount: resultsCount. 
 	
 ]
 
@@ -41,7 +47,7 @@ LuaState >> executePushingNone: aString [
 { #category : #accessing }
 LuaState >> executePushingOne: aString [ 
 
-	self execute: aString resultsCount: 1
+	^ self execute: aString resultsCount: 1
 ]
 
 { #category : #accessing }
@@ -93,6 +99,12 @@ LuaState >> numberAt: anIndex [
 ]
 
 { #category : #accessing }
+LuaState >> numberAt: anIndex ifNotNumber: aBlock [
+
+	^ self liblua lua: self externalAddress tonumberx: anIndex ifNotNumber: aBlock
+]
+
+{ #category : #accessing }
 LuaState >> on: functionName do: aBlock [ 
 
 	| callback |
@@ -107,7 +119,7 @@ LuaState >> on: functionName do: aBlock [
 { #category : #accessing }
 LuaState >> protectedCallArgumentsCount: argsCount resultsCount: resultsCount [ 
 
-	self liblua lua: self externalAddress pcallnargs: argsCount nresults: resultsCount.
+	^ self liblua lua: self externalAddress pcallnargs: argsCount nresults: resultsCount.
 ]
 
 { #category : #accessing }
@@ -138,6 +150,32 @@ LuaState >> pushString: aString [
 LuaState >> read: index [ 
 
 	^ self liblua read: index from: self externalAddress.
+]
+
+{ #category : #accessing }
+LuaState >> registerPath: aPathString [ 
+
+	^ self liblua
+		  luaL: self externalAddress
+		  dostring:
+		  'package.path = package.path .. ";', aPathString, '/?.lua"'
+]
+
+{ #category : #accessing }
+LuaState >> require: packageName [ 
+
+	^ self liblua
+		  luaL: self externalAddress
+		  dostring: 'require "', packageName, '"'
+]
+
+{ #category : #accessing }
+LuaState >> require: packageName as: aName [
+
+	^ self liblua
+		  luaL: self externalAddress
+		  dostring:
+		  aName , ' = require "', packageName, '"'
 ]
 
 { #category : #private }
