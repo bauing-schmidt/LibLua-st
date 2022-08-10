@@ -227,6 +227,14 @@ LuaState >> read: index [
 ]
 
 { #category : #accessing }
+LuaState >> readGlobal: aName [ 
+
+	^ self 
+		getGlobal: aName;
+		read: -1.
+]
+
+{ #category : #accessing }
 LuaState >> registerPath: aPathString [ 
 
 	^ self liblua
