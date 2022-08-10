@@ -22,6 +22,18 @@ LuaStateTest >> averageAndSum: lua [
 ]
 
 { #category : #tests }
+LuaStateTest >> commandDefLuaSource [
+
+	^ '
+
+function command (tbl)
+	return { name = tbl[1], context=1, followups=tbl[2] or {}, action=nil }
+end
+
+'
+]
+
+{ #category : #tests }
 LuaStateTest >> commandsLuaSource [
 
 	^ '
@@ -46,11 +58,17 @@ LuaStateTest >> liblua [
 ]
 
 { #category : #tests }
-LuaStateTest >> pushCommandTableOnLua: lua random: random acc: aKey [
+LuaStateTest >> pushCommandTableOnLua: stateAddress random: random acc: aKey [
 
 	"According to https://stackoverflow.com/questions/20147027/creating-a-simple-table-with-lua-tables-c-api"
 
-	| s name |
+	| s name lua |
+
+	lua := LuaState new
+			externalAddress: stateAddress;
+			liblua: self liblua;
+			yourself.
+	
 	lua checkTypeAt: 1 equals: #LUA_TTABLE.
 
 	lua pushNewTable.
@@ -136,16 +154,47 @@ LuaStateTest >> testCommandsUsingLuaAPI [
 		          lua
 			          push: [ :ongoingState | 
 				          self
-					          pushCommandTableOnLua: lua
+					          pushCommandTableOnLua: ongoingState
 					          random: random
 					          acc: r ];
 			          setGlobal: 'command';
 			          do: self recSumLuaSource;
 			          do: self commandsLuaSource;
 			          executePushingOne: 'return recSum(commands)';
-			         	numberAt: -1 ifNotNumber: [ Error signal ] ].
+			          numberAt: -1 ifNotNumber: [ Error signal ] ].
 
 	self assert: result equals: r key
+]
+
+{ #category : #tests }
+LuaStateTest >> testCommandsUsingLuaDefs [
+
+	| result |
+	result := self liblua do: [ :lua | 
+		          lua
+			          do: self commandDefLuaSource;
+			          do: self recSumLuaSource;
+			          do: self commandsLuaSource;
+			          executePushingOne: 'return recSum(commands)';
+			          integerAt: -1 ifNotInteger: [ Error signal ] ].
+
+	self assert: result equals: 4
+]
+
+{ #category : #tests }
+LuaStateTest >> testCommandsUsingLuaDefsReadingTableBack [
+
+	| result |
+	result := self liblua do: [ :lua | 
+		          lua
+			          do: self commandDefLuaSource;
+			          do: self commandsLuaSource;
+			          getGlobal: 'commands';
+			          getFieldAt: 1 ofValueAt: -1;
+						 getField: 'name' ofValueAt: -1;
+			          stringAt: -1 ].
+
+	self assert: result equals: 'create'
 ]
 
 { #category : #tests }

@@ -193,7 +193,7 @@ LuaState >> push: anObject [
 { #category : #accessing }
 LuaState >> pushNewTable [ 
 
-	self liblua lua_newtable: self externalAddress.
+	^ self liblua lua_newtable: self externalAddress.
 ]
 
 { #category : #accessing }
