@@ -295,6 +295,50 @@ LuaStateTest >> testCopyCompare [
 ]
 
 { #category : #tests }
+LuaStateTest >> testHeapBench [
+
+	| random array luaTimeToRun smalltalkTimeToRun  |
+	self timeLimit: 1 minute.
+
+	random := Random seed: 541.
+	array := (1 to: 1e7) asArray shuffleBy: random.
+
+	self liblua do: [ :lua | 
+		| c state | 
+		
+		lua
+			registerPath: './lua';
+			require: 'io.github.massimo-nocentini.on-lua.heapq' as: 'heapq';
+			require: 'io.github.massimo-nocentini.on-lua.heapkt' as: 'heapkt';
+			require: 'io.github.massimo-nocentini.on-lua.extensions'.
+
+		c := lua
+			     getGlobal: 'heapq';
+			     getField: 'new' ofValueAt: -1;
+			     push: array;
+			     protectedCallArgumentsCount: 1 resultsCount: 1.
+
+		self assert: c equals: 0.
+
+		lua
+			setGlobal: 'H';
+			getGlobal: 'heapq';
+			getField: 'heapify' ofValueAt: -1;
+			getGlobal: 'H'.
+
+		luaTimeToRun := [ 
+                | code |
+                code :=  lua protectedCallArgumentsCount: 1 resultsCount: 1.
+                self assert: code equals: 0 ] timeToRun.
+	].
+
+	smalltalkTimeToRun := [ Heap withAll: array ] timeToRun.
+
+	luaTimeToRun traceCrAs: 'Lua time'.
+	smalltalkTimeToRun traceCrAs: 'Pharo time'.
+]
+
+{ #category : #tests }
 LuaStateTest >> testLoadThenPCall [
 
 	| code |
