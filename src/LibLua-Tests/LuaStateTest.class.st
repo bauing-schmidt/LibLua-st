@@ -139,6 +139,23 @@ LuaStateTest >> testCFunctionAverage [
 ]
 
 { #category : #tests }
+LuaStateTest >> testCFunctionPCallCoroutine [
+
+	| s e |
+	self liblua do: [ :lua | 
+		lua
+			do: 'co = coroutine.create(function (...) print(pcall(coroutine.yield, ...)) end)';
+			executePushingTwo: 'return coroutine.resume(co, "hello")'.
+			
+		s := lua booleanAt: -2.
+		e := lua stringAt: -1 ].
+
+	self
+		assert: s equals: 1;
+		assert: e equals: 'hello'
+]
+
+{ #category : #tests }
 LuaStateTest >> testCommandsUsingLuaAPI [
 
 	| result random r |

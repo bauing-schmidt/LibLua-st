@@ -16,6 +16,12 @@ LuaState >> addGlobal: anObject as: aName [
 ]
 
 { #category : #accessing }
+LuaState >> booleanAt: anIndex [ 
+
+	^ self liblua lua: self externalAddress toboolean: anIndex
+]
+
+{ #category : #accessing }
 LuaState >> checkTypeAt: anIndex equals: typeName [ 
 
 	^ self liblua
