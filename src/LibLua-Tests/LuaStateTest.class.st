@@ -304,7 +304,7 @@ LuaStateTest >> testHeapBench [
 	array := (1 to: 1e7) asArray shuffleBy: random.
 
 	self liblua do: [ :lua | 
-		| c state | 
+		| c | 
 		
 		lua
 			registerPath: './lua';
