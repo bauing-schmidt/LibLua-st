@@ -198,6 +198,29 @@ LuaStateTest >> testCommandsUsingLuaDefsReadingTableBack [
 ]
 
 { #category : #tests }
+LuaStateTest >> testCommandsUsingLuaDefsTableDo [
+
+	| result |
+	result := OrderedCollection new.
+
+	self liblua do: [ :lua | 
+		lua
+			do: self commandDefLuaSource;
+			do: self commandsLuaSource;
+			getGlobal: 'commands';
+			tableAt: -1 do: [ :k :v | 
+				| keyType valueType |
+				keyType := lua typeNameOf: k.
+				valueType := lua typeNameOf: v.
+				result add: keyType -> valueType ] ].
+
+	self
+		assert: result first equals: 'number' -> 'table';
+		assert: result second equals: 'number' -> 'table';
+		assert: result size equals: 2
+]
+
+{ #category : #tests }
 LuaStateTest >> testCopy [
 
 	| result original |

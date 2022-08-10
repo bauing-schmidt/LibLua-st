@@ -269,7 +269,7 @@ LuaState >> stringAt: anIndex [
 { #category : #accessing }
 LuaState >> tableAt: anIndex do: aBlock [
 
-	self liblua table: self externalAddress at: anIndex do: aBlock
+	^ self liblua table: self externalAddress at: anIndex do: aBlock
 ]
 
 { #category : #accessing }
