@@ -195,7 +195,7 @@ LuaState >> protectedCallArgumentsCount: argsCount resultsCount: resultsCount [
 { #category : 'accessing' }
 LuaState >> push: anObject [
 
-	self liblua push: anObject on: self externalAddress
+	self liblua on: self externalAddress push: anObject
 ]
 
 { #category : 'accessing' }
