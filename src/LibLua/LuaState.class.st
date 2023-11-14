@@ -184,9 +184,12 @@ LuaState >> privTypeNameOf: luaTypeId [
 ]
 
 { #category : 'accessing' }
-LuaState >> protectedCallArgumentsCount: argsCount resultsCount: resultsCount [ 
+LuaState >> protectedCallArgumentsCount: argsCount resultsCount: resultsCount [
 
-	^ self liblua lua: self externalAddress pcallnargs: argsCount nresults: resultsCount.
+	^ self liblua
+		  lua_pcall: self externalAddress
+		  nargs: argsCount
+		  nresults: resultsCount
 ]
 
 { #category : 'accessing' }
