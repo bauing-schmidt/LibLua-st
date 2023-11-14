@@ -9,16 +9,14 @@ Class {
 }
 
 { #category : 'API' }
-LibLua >> do: aBlock [ 
+LibLua >> do: aBlock [
 
-	^ self withOpenedLibsStateDo: [ :stateAddr | 
-		| state |
-		state := LuaState new
-			externalAddress: stateAddr;
-			liblua: self;
-			yourself.
-		aBlock value: state.
-	]
+	^ self implementationPrimitive withOpenedLibsStateDo: [ :stateAddr |
+		  LuaState new
+			  externalAddress: stateAddr;
+			  liblua: self;
+			  in: aBlock
+	  ]
 ]
 
 { #category : 'creating' }
@@ -72,8 +70,8 @@ $(LUA_A): $(BASE_O)
 		  { 'liblua5.4.6.so'. 'liblua5.4.4.so' }
 ]
 
-{ #category : 'accessing platform' }
+{ #category : 'accessing - platform' }
 LibLua >> win32LibraryName [
 
-	^ FFIWindowsLibraryFinder findAnyLibrary: #( 'lua/lib/lua54.dll' )
+	^ FFIWindowsLibraryFinder findAnyLibrary: #( 'lua54.dll' )
 ]
