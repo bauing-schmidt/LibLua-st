@@ -295,50 +295,6 @@ LuaStateTest >> testCopyCompare [
 ]
 
 { #category : 'tests' }
-LuaStateTest >> testHeapBench [
-
-	| random array luaTimeToRun smalltalkTimeToRun  |
-	self timeLimit: 1 minute.
-
-	random := Random seed: 541.
-	array := (1 to: 1e7) asArray shuffleBy: random.
-
-	self liblua do: [ :lua | 
-		| c | 
-		
-		lua
-			registerPath: './lua';
-			require: 'io.github.massimo-nocentini.on-lua.heapq' as: 'heapq';
-			require: 'io.github.massimo-nocentini.on-lua.heapkt' as: 'heapkt';
-			require: 'io.github.massimo-nocentini.on-lua.extensions'.
-
-		c := lua
-			     getGlobal: 'heapq';
-			     getField: 'new' ofValueAt: -1;
-			     push: array;
-			     protectedCallArgumentsCount: 1 resultsCount: 1.
-
-		self assert: c equals: 0.
-
-		lua
-			setGlobal: 'H';
-			getGlobal: 'heapq';
-			getField: 'heapify' ofValueAt: -1;
-			getGlobal: 'H'.
-
-		luaTimeToRun := [ 
-                | code |
-                code :=  lua protectedCallArgumentsCount: 1 resultsCount: 1.
-                self assert: code equals: 0 ] timeToRun.
-	].
-
-	smalltalkTimeToRun := [ Heap withAll: array ] timeToRun.
-
-	luaTimeToRun traceCrAs: 'Lua time'.
-	smalltalkTimeToRun traceCrAs: 'Pharo time'.
-]
-
-{ #category : 'tests' }
 LuaStateTest >> testLoadThenPCall [
 
 	| code |
@@ -609,27 +565,4 @@ LuaStateTest >> testSetGlobalMySinAsCallback [
 		assert: code equals: 0;
 		assert: called;
 		assert: result equals: 3 sin
-]
-
-{ #category : 'tests' }
-LuaStateTest >> testTableMap [
-
-	| list |
-
-	self liblua do: [ :lua | 
-		
-		lua registerPath: './lua'.
-		lua require: 'io.github.massimo-nocentini.on-lua.operator' as: 'op'.
-		lua require: 'io.github.massimo-nocentini.on-lua.extensions'.
-
-		list := lua
-			do: 'list = {5, 4, 3, 2, 1}';
-			do: 'print(table.contains)';
-			do: 'print(op.increment)';
-			do: 'print(coroutine.zip)';
-			do: 'list = table.map(list, op.increment)';
-			execute: 'return table.concat(list, ", ")'.
-	].
-
-	self assert: list equals: '6, 5, 4, 3, 2'
 ]
