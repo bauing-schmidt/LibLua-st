@@ -64,12 +64,11 @@ LuaStateTest >> pushCommandTableOnLua: state random: random acc: aKey [
 	"According to https://stackoverflow.com/questions/20147027/creating-a-simple-table-with-lua-tables-c-api"
 
 	| s name lua |
-	
 	lua := LuaState new
-			externalAddress: state;
-			liblua: self liblua;
-			yourself.
-	
+		externalAddress: state;
+		liblua: self liblua implementationPrimitive;
+		yourself.
+
 	lua checkTypeAt: 1 equals: #LUA_TTABLE.
 
 	lua pushNewTable.
@@ -81,15 +80,15 @@ LuaStateTest >> pushCommandTableOnLua: state random: random acc: aKey [
 	s := random next.
 	aKey key: aKey key + s.
 
-	lua 
+	lua
 		push: s;
 		setField: 'context' ofValueAt: -2.
-		
-	lua 
-		getFieldAt: 2 ofValueAt: -2;
-		setField: 'followups' ofValueAt: -2.		
 
-	lua 
+	lua
+		getFieldAt: 2 ofValueAt: -2;
+		setField: 'followups' ofValueAt: -2.
+
+	lua
 		push: 'noop';
 		setField: 'action' ofValueAt: -2.
 
