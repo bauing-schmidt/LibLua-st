@@ -581,26 +581,29 @@ LuaStateTest >> testSetGlobalMySinAsCallback [
 	| code result called |
 	called := false.
 
-	self liblua do: [ :lua | 
-		lua addGlobal: [ :ongoingState | 
+	self liblua do: [ :lua |
+		lua
+			addGlobal: [ :ongoingState |
 				| number |
 				called := true.
 				self assert: ongoingState equals: lua externalAddress.
 
-				number := self liblua luaL:  lua externalAddress checknumber: 1.
+				number := lua liblua luaL: lua externalAddress checknumber: 1.
 
-				self liblua push: number sin on: ongoingState.
+				lua liblua on: ongoingState push: number sin.
 
-				1 "number of results" ]
-		as: 'mysin'.
+				1 "number of results"
+			]
+			as: 'mysin'.
 
 		code := lua executePushingOne: 'return mysin(3)'.
 
-"		self liblua luaL:  lua externalAddress loadstring: 'return mysin(3)'.
+		"		self liblua luaL:  lua externalAddress loadstring: 'return mysin(3)'.
 		code := self liblua lua:  lua externalAddress pcallnargs: 0 nresults: 1.
 "
 
-		result := lua numberAt: -1 ifNotNumber: [ Error signal ] ].
+		result := lua numberAt: -1 ifNotNumber: [ Error signal ]
+	].
 
 	self
 		assert: code equals: 0;

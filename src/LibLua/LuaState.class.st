@@ -223,9 +223,9 @@ LuaState >> pushString: aString [
 ]
 
 { #category : 'accessing' }
-LuaState >> read: index [ 
+LuaState >> read: index [
 
-	^ self liblua read: index from: self externalAddress.
+	^ self liblua on: self externalAddress at: index
 ]
 
 { #category : 'accessing' }
