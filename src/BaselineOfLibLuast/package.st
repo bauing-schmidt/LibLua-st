@@ -1,1 +1,1 @@
-Package { #name : #BaselineOfLibLuast }
+Package { #name : 'BaselineOfLibLuast' }

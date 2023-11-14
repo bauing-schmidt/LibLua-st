@@ -1,27 +1,28 @@
 Class {
-	#name : #LuaState,
-	#superclass : #Object,
+	#name : 'LuaState',
+	#superclass : 'Object',
 	#instVars : [
 		'liblua',
 		'externalAddress'
 	],
-	#category : #LibLua
+	#category : 'LibLua',
+	#package : 'LibLua'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> addGlobal: anObject as: aName [ 
 
 	self push: anObject.
 	self setGlobal: aName.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> booleanAt: anIndex [ 
 
 	^ self liblua lua: self externalAddress toboolean: anIndex
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> checkTypeAt: anIndex equals: typeName [ 
 
 	^ self liblua
@@ -30,7 +31,7 @@ LuaState >> checkTypeAt: anIndex equals: typeName [
 		type: (self typeIdOfTypeName: typeName)
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> checkTypeAt: anIndex equalsId: typeId [ 
 
 	^ self liblua
@@ -39,25 +40,25 @@ LuaState >> checkTypeAt: anIndex equalsId: typeId [
 		type: typeId
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> compareAt: index1 toValueAt: index2 [
 
 	^ self liblua lua: self externalAddress compare: index1 eq: index2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> copyFrom: fromIndex to: toIndex [
 
 	^ self liblua lua: self externalAddress copy: fromIndex to: toIndex
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> do: aString [
 
 	^ self liblua luaL: self externalAddress dostring: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> execute: aString [ 
 
 	"one returned object"
@@ -66,7 +67,7 @@ LuaState >> execute: aString [
 	^ self read: -1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> execute: aString resultsCount: resultsCount [
 
 	self load: aString.
@@ -74,97 +75,97 @@ LuaState >> execute: aString resultsCount: resultsCount [
 	
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> executePushingNone: aString [ 
 
 	^ self execute: aString resultsCount: 0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> executePushingOne: aString [ 
 
 	^ self execute: aString resultsCount: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> executePushingTwo: aString [ 
 
 	^ self execute: aString resultsCount: 2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> externalAddress [
 
 	^ externalAddress
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> externalAddress: anObject [
 
 	externalAddress := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> getField: fieldName ofValueAt: anIndex [
 
 	^ self liblua lua: self externalAddress get: anIndex field: fieldName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> getFieldAt: anIndex ofValueAt: valueIndex [
 
 	^ self liblua lua: self externalAddress get: valueIndex i: anIndex
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> getGlobal: aName [ 
 
 	self liblua lua: self externalAddress getglobal: aName.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> getTop [
 
 	^ self liblua lua_gettop: externalAddress
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> integerAt: anIndex ifNotInteger: aBlock [
 
 	^ self liblua lua: self externalAddress tointegerx: anIndex ifNotInteger: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> liblua [
 
 	^ liblua
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> liblua: anObject [
 
 	liblua := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> load: aString [
 
 	self liblua luaL: self externalAddress loadstring: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> numberAt: anIndex [ 
 
 	^ self liblua lua: self externalAddress tonumber: anIndex
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> numberAt: anIndex ifNotNumber: aBlock [
 
 	^ self liblua lua: self externalAddress tonumberx: anIndex ifNotNumber: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> on: functionName do: aBlock [ 
 
 	| callback |
@@ -176,7 +177,7 @@ LuaState >> on: functionName do: aBlock [
 	self liblua lua: self externalAddress register: functionName cfunction: callback.	
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LuaState >> privTypeNameOf: luaTypeId [ 
 
 	^ self liblua
@@ -184,49 +185,49 @@ LuaState >> privTypeNameOf: luaTypeId [
 			typename: luaTypeId
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> protectedCallArgumentsCount: argsCount resultsCount: resultsCount [ 
 
 	^ self liblua lua: self externalAddress pcallnargs: argsCount nresults: resultsCount.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> push: anObject [
 
 	self liblua push: anObject on: self externalAddress
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> pushNewTable [ 
 
 	^ self liblua lua_newtable: self externalAddress.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> pushNil [
 
 	self liblua lua_pushnil: self externalAddress
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> pushNumber: aNumber [
 
 	self liblua lua: self externalAddress pushnumber: aNumber asFloat
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> pushString: aString [
 
 	self liblua lua: self externalAddress pushstring: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> read: index [ 
 
 	^ self liblua read: index from: self externalAddress.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> readGlobal: aName [ 
 
 	^ self 
@@ -234,7 +235,7 @@ LuaState >> readGlobal: aName [
 		read: -1.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> registerPath: aPathString [ 
 
 	^ self liblua
@@ -243,7 +244,7 @@ LuaState >> registerPath: aPathString [
 		  'package.path = package.path .. ";', aPathString, '/?.lua"'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> require: packageName [ 
 
 	^ self liblua
@@ -251,7 +252,7 @@ LuaState >> require: packageName [
 		  dostring: 'require "', packageName, '"'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> require: packageName as: aName [
 
 	^ self liblua
@@ -260,13 +261,13 @@ LuaState >> require: packageName as: aName [
 		  aName , ' = require "', packageName, '"'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> setField: fieldName ofValueAt: anIndex [
 
 	^ self liblua lua: self externalAddress set: anIndex field: fieldName
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 LuaState >> setGlobal: aString [ 
 
 	"Pops a value from the stack and sets it as the new value of global name."
@@ -274,31 +275,31 @@ LuaState >> setGlobal: aString [
 	self liblua lua: self externalAddress setglobal: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> stringAt: anIndex [ 
 
 	^ self liblua lua: self externalAddress tostring: anIndex
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> tableAt: anIndex do: aBlock [
 
 	^ self liblua table: self externalAddress at: anIndex do: aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> typeIdOf: anObject [ 
 
 	^ self liblua lua:  self externalAddress type: anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> typeIdOfTypeName: typeName [ 
 
 	^ self liblua typeAt: typeName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 LuaState >> typeNameOf: anObject [ 
 
 	^ self privTypeNameOf: (self typeIdOf: anObject)
