@@ -170,9 +170,7 @@ LuaState >> on: functionName do: aBlock [
 
 	| callback |
 	
-	callback := self liblua ffiCallback: [ :s | 
-		aBlock value: self
-	 ].
+	callback := self liblua fficallbackOnBlock: [ :s | aBlock value: self ].
 
 	self liblua lua: self externalAddress register: functionName cfunction: callback.	
 ]

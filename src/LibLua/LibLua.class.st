@@ -11,10 +11,13 @@ Class {
 { #category : 'API' }
 LibLua >> do: aBlock [
 
-	^ self implementationPrimitive withOpenedLibsStateDo: [ :stateAddr |
+	| impl |
+	impl := self implementationPrimitive.
+
+	^ impl withOpenedLibsStateDo: [ :stateAddr |
 		  LuaState new
 			  externalAddress: stateAddr;
-			  liblua: self;
+			  liblua: impl;
 			  in: aBlock
 	  ]
 ]
