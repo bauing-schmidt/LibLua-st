@@ -1,7 +1,7 @@
-Extension { #name : #Float }
+Extension { #name : 'Float' }
 
-{ #category : #'*LibLua' }
-Float >> pushOnLua: state [
+{ #category : '*LibLua' }
+Float >> pushOnLua: state liblua: liblua [
 
-	^ LibLua uniqueInstance lua: state pushnumber: self
+	^ liblua lua: state pushnumber: self
 ]

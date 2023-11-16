@@ -1,10 +1,11 @@
 Class {
-	#name : #LuaStateTest,
-	#superclass : #TestCase,
-	#category : #'LibLua-Tests'
+	#name : 'LuaStateTest',
+	#superclass : 'TestCase',
+	#category : 'LibLua-Tests',
+	#package : 'LibLua-Tests'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> averageAndSum: lua [
 
 
@@ -21,7 +22,7 @@ LuaStateTest >> averageAndSum: lua [
 	^ 2
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> commandDefLuaSource [
 
 	^ '
@@ -33,7 +34,7 @@ end
 '
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> commandsLuaSource [
 
 	^ '
@@ -51,24 +52,23 @@ commands = {
 '
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> liblua [
 
 	^ LibLua uniqueInstance
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> pushCommandTableOnLua: state random: random acc: aKey [
 
 	"According to https://stackoverflow.com/questions/20147027/creating-a-simple-table-with-lua-tables-c-api"
 
 	| s name lua |
-	
 	lua := LuaState new
-			externalAddress: state;
-			liblua: self liblua;
-			yourself.
-	
+		externalAddress: state;
+		liblua: self liblua implementationPrimitive;
+		yourself.
+
 	lua checkTypeAt: 1 equals: #LUA_TTABLE.
 
 	lua pushNewTable.
@@ -80,22 +80,22 @@ LuaStateTest >> pushCommandTableOnLua: state random: random acc: aKey [
 	s := random next.
 	aKey key: aKey key + s.
 
-	lua 
+	lua
 		push: s;
 		setField: 'context' ofValueAt: -2.
-		
-	lua 
-		getFieldAt: 2 ofValueAt: -2;
-		setField: 'followups' ofValueAt: -2.		
 
-	lua 
+	lua
+		getFieldAt: 2 ofValueAt: -2;
+		setField: 'followups' ofValueAt: -2.
+
+	lua
 		push: 'noop';
 		setField: 'action' ofValueAt: -2.
 
 	^ 1 "number of results"
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> recSumLuaSource [
 
 	^ '
@@ -112,7 +112,7 @@ end
 '
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testCFunctionAverage [
 
 	| avg sum |
@@ -138,7 +138,7 @@ LuaStateTest >> testCFunctionAverage [
 		assert: sum equals: { 12. 43. 43. 450 } sum
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testCFunctionPCallCoroutine [
 
 	| s e |
@@ -155,7 +155,7 @@ LuaStateTest >> testCFunctionPCallCoroutine [
 		assert: e equals: 'hello'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testCommandsUsingLuaAPI [
 
 	| result random r |
@@ -183,7 +183,7 @@ LuaStateTest >> testCommandsUsingLuaAPI [
 	self assert: result equals: r key
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testCommandsUsingLuaDefs [
 
 	| result |
@@ -198,7 +198,7 @@ LuaStateTest >> testCommandsUsingLuaDefs [
 	self assert: result equals: 4
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testCommandsUsingLuaDefsReadingTableBack [
 
 	| result |
@@ -214,7 +214,7 @@ LuaStateTest >> testCommandsUsingLuaDefsReadingTableBack [
 	self assert: result equals: 'create'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testCommandsUsingLuaDefsTableDo [
 
 	| result |
@@ -237,7 +237,7 @@ LuaStateTest >> testCommandsUsingLuaDefsTableDo [
 		assert: result size equals: 2
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testCopy [
 
 	| result original |
@@ -272,7 +272,7 @@ LuaStateTest >> testCopy [
 		assert: result size equals: 3
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testCopyCompare [
 
 	| outer inner |
@@ -294,51 +294,7 @@ LuaStateTest >> testCopyCompare [
 		assert: inner equals: 1
 ]
 
-{ #category : #tests }
-LuaStateTest >> testHeapBench [
-
-	| random array luaTimeToRun smalltalkTimeToRun  |
-	self timeLimit: 1 minute.
-
-	random := Random seed: 541.
-	array := (1 to: 1e7) asArray shuffleBy: random.
-
-	self liblua do: [ :lua | 
-		| c | 
-		
-		lua
-			registerPath: './lua';
-			require: 'io.github.massimo-nocentini.on-lua.heapq' as: 'heapq';
-			require: 'io.github.massimo-nocentini.on-lua.heapkt' as: 'heapkt';
-			require: 'io.github.massimo-nocentini.on-lua.extensions'.
-
-		c := lua
-			     getGlobal: 'heapq';
-			     getField: 'new' ofValueAt: -1;
-			     push: array;
-			     protectedCallArgumentsCount: 1 resultsCount: 1.
-
-		self assert: c equals: 0.
-
-		lua
-			setGlobal: 'H';
-			getGlobal: 'heapq';
-			getField: 'heapify' ofValueAt: -1;
-			getGlobal: 'H'.
-
-		luaTimeToRun := [ 
-                | code |
-                code :=  lua protectedCallArgumentsCount: 1 resultsCount: 1.
-                self assert: code equals: 0 ] timeToRun.
-	].
-
-	smalltalkTimeToRun := [ Heap withAll: array ] timeToRun.
-
-	luaTimeToRun traceCrAs: 'Lua time'.
-	smalltalkTimeToRun traceCrAs: 'Pharo time'.
-]
-
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testLoadThenPCall [
 
 	| code |
@@ -349,7 +305,7 @@ LuaStateTest >> testLoadThenPCall [
 	self assert: code equals: 0
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testLoadThenPCallThenToString [
 
 	| code error |
@@ -365,7 +321,7 @@ LuaStateTest >> testLoadThenPCallThenToString [
 		'[string "(function (a, b) return error("hello") end) (..."]:1: hello'
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testLoadThenPCallWithReturnInteger [
 
 	| code seven |
@@ -379,7 +335,7 @@ LuaStateTest >> testLoadThenPCallWithReturnInteger [
 		assert: seven equals: 8
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testLoadThenPCallWithReturnIntegerFail [
 
 	| code seven witness |
@@ -395,7 +351,7 @@ LuaStateTest >> testLoadThenPCallWithReturnIntegerFail [
 		assert: seven equals: witness
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testLoadThenPCallWithReturnIntegerInString [
 
 	| code seven |
@@ -410,7 +366,7 @@ LuaStateTest >> testLoadThenPCallWithReturnIntegerInString [
 		assert: seven equals: 8
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testLoadThenPCallWithReturnNumber [
 
 	| code seven |
@@ -425,7 +381,7 @@ LuaStateTest >> testLoadThenPCallWithReturnNumber [
 		assert: seven equals: 8.2
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testLoadThenPCallWithReturnNumberFail [
 
 	| code seven witness |
@@ -441,7 +397,7 @@ LuaStateTest >> testLoadThenPCallWithReturnNumberFail [
 		assert: seven equals: witness
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testLoadThenPCallWithReturnString [
 
 	| code seven |
@@ -456,7 +412,7 @@ LuaStateTest >> testLoadThenPCallWithReturnString [
 		assert: seven equals: '7 hello '
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testLuaSeti [
 
 	| list random array |
@@ -471,7 +427,7 @@ LuaStateTest >> testLuaSeti [
 	self assert: '#(' , list , ')' equals: array asString
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testNewCloseState [
 
 	| three |
@@ -482,7 +438,7 @@ LuaStateTest >> testNewCloseState [
 	self assert: three equals: 3
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testReadFromArray [
 
 	self liblua do: [ :lua | 
@@ -504,7 +460,7 @@ LuaStateTest >> testReadFromArray [
 
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testReadFromBoolean [
 
 	self liblua do: [ :lua | 
@@ -517,7 +473,7 @@ LuaStateTest >> testReadFromBoolean [
 	]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testReadFromInteger [
 
 	self liblua do: [ :lua | 
@@ -527,7 +483,7 @@ LuaStateTest >> testReadFromInteger [
 	]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testReadFromNil [
 
 	self liblua do: [ :lua | 
@@ -537,7 +493,7 @@ LuaStateTest >> testReadFromNil [
 	]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testReadFromNumber [
 
 	self liblua do: [ :lua | 
@@ -547,7 +503,7 @@ LuaStateTest >> testReadFromNumber [
 	]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testReadFromString [
 
 	self liblua do: [ :lua | 
@@ -557,7 +513,7 @@ LuaStateTest >> testReadFromString [
 	]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testReadFromTable [
 
 	self liblua do: [ :lua | 
@@ -575,58 +531,38 @@ LuaStateTest >> testReadFromTable [
 				 yourself) ]
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 LuaStateTest >> testSetGlobalMySinAsCallback [
 
 	| code result called |
 	called := false.
 
-	self liblua do: [ :lua | 
-		lua addGlobal: [ :ongoingState | 
+	self liblua do: [ :lua |
+		lua
+			addGlobal: [ :ongoingState |
 				| number |
 				called := true.
 				self assert: ongoingState equals: lua externalAddress.
 
-				number := self liblua luaL:  lua externalAddress checknumber: 1.
+				number := lua liblua luaL: lua externalAddress checknumber: 1.
 
-				self liblua push: number sin on: ongoingState.
+				lua liblua on: ongoingState push: number sin.
 
-				1 "number of results" ]
-		as: 'mysin'.
+				1 "number of results"
+			]
+			as: 'mysin'.
 
 		code := lua executePushingOne: 'return mysin(3)'.
 
-"		self liblua luaL:  lua externalAddress loadstring: 'return mysin(3)'.
+		"		self liblua luaL:  lua externalAddress loadstring: 'return mysin(3)'.
 		code := self liblua lua:  lua externalAddress pcallnargs: 0 nresults: 1.
 "
 
-		result := lua numberAt: -1 ifNotNumber: [ Error signal ] ].
+		result := lua numberAt: -1 ifNotNumber: [ Error signal ]
+	].
 
 	self
 		assert: code equals: 0;
 		assert: called;
 		assert: result equals: 3 sin
-]
-
-{ #category : #tests }
-LuaStateTest >> testTableMap [
-
-	| list |
-
-	self liblua do: [ :lua | 
-		
-		lua registerPath: './lua'.
-		lua require: 'io.github.massimo-nocentini.on-lua.operator' as: 'op'.
-		lua require: 'io.github.massimo-nocentini.on-lua.extensions'.
-
-		list := lua
-			do: 'list = {5, 4, 3, 2, 1}';
-			do: 'print(table.contains)';
-			do: 'print(op.increment)';
-			do: 'print(coroutine.zip)';
-			do: 'list = table.map(list, op.increment)';
-			execute: 'return table.concat(list, ", ")'.
-	].
-
-	self assert: list equals: '6, 5, 4, 3, 2'
 ]
