@@ -3,66 +3,10 @@ I am the implementation that uses FFI calls.
 "
 Class {
 	#name : 'LibLuaFFIImplementation',
-	#superclass : 'Object',
-	#classVars : [
-		'LUA_MULTRET',
-		'ThreadStatuses',
-		'Types'
-	],
+	#superclass : 'LibLuaAbstractImplementation',
 	#category : 'LibLua',
 	#package : 'LibLua'
 }
-
-{ #category : 'class initialization' }
-LibLuaFFIImplementation class >> initialize [
-
-	"
-#define LUA_TNONE		(-1)
-
-#define LUA_TNIL		0
-#define LUA_TBOOLEAN		1
-#define LUA_TLIGHTUSERDATA	2
-#define LUA_TNUMBER		3
-#define LUA_TSTRING		4
-#define LUA_TTABLE		5
-#define LUA_TFUNCTION		6
-#define LUA_TUSERDATA		7
-#define LUA_TTHREAD		8
-"
-
-	Types := Dictionary new
-		at: #LUA_TNIL put: 0;
-		at: #LUA_TBOOLEAN put: 1;
-		at: #LUA_TLIGHTUSERDATA put: 2;
-		at: #LUA_TNUMBER put: 3;
-		at: #LUA_TSTRING put: 4;
-		at: #LUA_TTABLE put: 5;
-		at: #LUA_TFUNCTION put: 6;
-		at: #LUA_TUSERDATA put: 7;
-		at: #LUA_TTHREAD put: 8;
-		yourself.
-
-
-	"/* thread status */
-#define LUA_OK		0
-#define LUA_YIELD	1
-#define LUA_ERRRUN	2
-#define LUA_ERRSYNTAX	3
-#define LUA_ERRMEM	4
-#define LUA_ERRERR	5"
-
-	ThreadStatuses := Dictionary new
-		at: #LUA_OK put: 0;
-		at: #LUA_YIELD put: 1;
-		at: #LUA_ERRRUN put: 2;
-		at: #LUA_ERRSYNTAX put: 3;
-		at: #LUA_ERRMEM put: 4;
-		at: #LUA_ERRERR put: 5;
-		yourself.
-
-	"#define LUA_MULTRET	(-1)"
-	LUA_MULTRET := -1
-]
 
 { #category : 'constants - thread status' }
 LibLuaFFIImplementation >> LUA_ERRERR [
@@ -1569,12 +1513,6 @@ LibLuaFFIImplementation >> table: L at: idx do: aBlock [
 		aBlock value: -2 value: -1.
 
 		self lua: L pop: 1 ]
-]
-
-{ #category : 'accessing' }
-LibLuaFFIImplementation >> typeAt: aTypeKey [
-
-	^ Types at: aTypeKey
 ]
 
 { #category : 'API' }

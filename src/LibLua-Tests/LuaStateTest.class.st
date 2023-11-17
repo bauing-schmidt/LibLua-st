@@ -69,12 +69,12 @@ LuaStateTest >> pushCommandTableOnLua: state random: random acc: aKey [
 		liblua: self liblua implementationPrimitive;
 		yourself.
 
-	lua checkTypeAt: 1 equals: #LUA_TTABLE.
+	lua checkTypeAt: 1 equals: lua liblua LUA_TTABLE.
 
 	lua pushNewTable.
 
 	name := lua getFieldAt: 1 ofValueAt: -2.
-	self assert: name equals: (lua typeIdOfTypeName: #LUA_TSTRING).
+	self assert: name equals: lua liblua LUA_TSTRING.
 	lua setField: 'name' ofValueAt: -2.
 
 	s := random next.
