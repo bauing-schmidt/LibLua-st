@@ -4,9 +4,23 @@ I bind functions in the Lua C API as described in https://www.lua.org/manual/5.4
 Class {
 	#name : 'LibLua',
 	#superclass : 'FFILibrary',
+	#instVars : [
+		'implementation'
+	],
+	#classVars : [
+		'implementationFFI',
+		'implementationPrimitive'
+	],
 	#category : 'LibLua',
 	#package : 'LibLua'
 }
+
+{ #category : 'class initialization' }
+LibLua class >> initialize [
+
+	implementationFFI := LibLuaFFIImplementation new.
+	implementationPrimitive := LibLuaPrimitiveImplementation new
+]
 
 { #category : 'API' }
 LibLua >> do: aBlock [
@@ -25,13 +39,13 @@ LibLua >> do: aBlock [
 { #category : 'creating' }
 LibLua >> implementationFFI [
 
-	^ LibLuaFFIImplementation new
+	^ implementationFFI
 ]
 
 { #category : 'creating' }
 LibLua >> implementationPrimitive [
 
-	^ LibLuaPrimitiveImplementation new
+	^ implementationPrimitive
 ]
 
 { #category : 'accessing - platform' }

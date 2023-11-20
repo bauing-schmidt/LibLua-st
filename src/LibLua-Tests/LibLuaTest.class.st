@@ -375,7 +375,7 @@ LibLuaTest >> testDictionary [
 
 	d
 		at: d put: d;
-		at: Object new put: Float goldenRatio.
+		at: Object new put: 1.618.
 
 	self assert: (d at: d) identicalTo: d
 ]
@@ -579,12 +579,11 @@ LibLuaTest >> testLuaSeti [
 	random := Random seed: 541.
 	array := (1 to: 100) asArray shuffleBy: random.
 
-	list := self liblua withOpenedLibsStateDo: [ :state | 
+	list := self liblua withOpenedLibsStateDo: [ :state |
 		        self liblua
 			        on: state push: array;
 			        lua: state setglobal: 'array';
-			        luaL: state
-			        loadstring: 'return  table.concat(array, " ")';
+			        luaL: state loadstring: 'return table.concat(array, " ")';
 			        lua_pcall: state nargs: 0 nresults: 1;
 			        lua: state tostring: -1 ].
 

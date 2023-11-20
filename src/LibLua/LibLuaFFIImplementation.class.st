@@ -3,66 +3,10 @@ I am the implementation that uses FFI calls.
 "
 Class {
 	#name : 'LibLuaFFIImplementation',
-	#superclass : 'Object',
-	#classVars : [
-		'LUA_MULTRET',
-		'ThreadStatuses',
-		'Types'
-	],
+	#superclass : 'LibLuaAbstractImplementation',
 	#category : 'LibLua',
 	#package : 'LibLua'
 }
-
-{ #category : 'class initialization' }
-LibLuaFFIImplementation class >> initialize [
-
-	"
-#define LUA_TNONE		(-1)
-
-#define LUA_TNIL		0
-#define LUA_TBOOLEAN		1
-#define LUA_TLIGHTUSERDATA	2
-#define LUA_TNUMBER		3
-#define LUA_TSTRING		4
-#define LUA_TTABLE		5
-#define LUA_TFUNCTION		6
-#define LUA_TUSERDATA		7
-#define LUA_TTHREAD		8
-"
-
-	Types := Dictionary new
-		at: #LUA_TNIL put: 0;
-		at: #LUA_TBOOLEAN put: 1;
-		at: #LUA_TLIGHTUSERDATA put: 2;
-		at: #LUA_TNUMBER put: 3;
-		at: #LUA_TSTRING put: 4;
-		at: #LUA_TTABLE put: 5;
-		at: #LUA_TFUNCTION put: 6;
-		at: #LUA_TUSERDATA put: 7;
-		at: #LUA_TTHREAD put: 8;
-		yourself.
-
-
-	"/* thread status */
-#define LUA_OK		0
-#define LUA_YIELD	1
-#define LUA_ERRRUN	2
-#define LUA_ERRSYNTAX	3
-#define LUA_ERRMEM	4
-#define LUA_ERRERR	5"
-
-	ThreadStatuses := Dictionary new
-		at: #LUA_OK put: 0;
-		at: #LUA_YIELD put: 1;
-		at: #LUA_ERRRUN put: 2;
-		at: #LUA_ERRSYNTAX put: 3;
-		at: #LUA_ERRMEM put: 4;
-		at: #LUA_ERRERR put: 5;
-		yourself.
-
-	"#define LUA_MULTRET	(-1)"
-	LUA_MULTRET := -1
-]
 
 { #category : 'constants - thread status' }
 LibLuaFFIImplementation >> LUA_ERRERR [
@@ -451,43 +395,8 @@ LibLuaFFIImplementation >> _on: state at: i cache: cache [
 	^ self lua_typename: state at: i
 ]
 
-{ #category : 'API' }
-LibLuaFFIImplementation >> append: dir onPackagePathOfLua: state [
-
-	^ self
-		  luaL: state
-		  dostring: 'package.path = package.path .. ";' , dir , '"'
-]
-
-{ #category : 'API' }
-LibLuaFFIImplementation >> assert: aBlock [
-
-	^ super assert: (aBlock cull: self) = self LUA_OK
-]
-
-{ #category : 'API' }
-LibLuaFFIImplementation >> fficallbackOnBlock: aBlock [
-
-	^ (FFICallback signature: #( int #( const void * a ) ) block: aBlock)
-		  getHandle
-]
-
 { #category : 'API - C' }
 LibLuaFFIImplementation >> lua: L compare: index1 another: index2 operator: op [
-	"From https://www.lua.org/manual/5.4/manual.html#lua_compare,
-	
-		int lua_compare (lua_State *L, int index1, int index2, int op);
-	
-	Compares two Lua values. Returns 1 if the value at index index1 satisfies 
-	op when compared with the value at index index2, following the semantics of 
-	the corresponding Lua operator (that is, it may call metamethods). 
-	Otherwise returns 0. Also returns 0 if any of the indices is not valid.
-
-	The value of op must be one of the following constants:
-
-		• LUA_OPEQ: compares for equality (==)
-		• LUA_OPLT: compares for less than (<)
-		• LUA_OPLE: compares for less or equal (<=)"
 
 	^ self
 		  ffiCall:
@@ -497,23 +406,7 @@ LibLuaFFIImplementation >> lua: L compare: index1 another: index2 operator: op [
 ]
 
 { #category : 'API - C' }
-LibLuaFFIImplementation >> lua: L compare: index1 eq: index2 [
-
-	^ self
-		  lua: L
-		  compare: index1
-		  another: index2
-		  operator: self LUA_OPEQ
-]
-
-{ #category : 'API - C' }
 LibLuaFFIImplementation >> lua: L copy: fromidx to: toidx [
-	"From https://www.lua.org/manual/5.4/manual.html#lua_copy,
-	
-		void lua_copy (lua_State *L, int fromidx, int toidx);
-	
-	Copies the element at index fromidx into the valid index toidx, replacing the 
-	value at that position. Values at other positions are not affected."
 
 	^ self
 		  ffiCall:
@@ -523,32 +416,11 @@ LibLuaFFIImplementation >> lua: L copy: fromidx to: toidx [
 
 { #category : 'API - C' }
 LibLuaFFIImplementation >> lua: L get: index field: k [
-	"From https://www.lua.org/manual/5.4/manual.html#lua_getfield,
-	
-		int lua_getfield (lua_State *L, int index, const char *k);
-	
-	Pushes onto the stack the value t[k], where t is the value at the given index. 
-	As in Lua, this function may trigger a metamethod for the ""index"" event 
-	(see https://www.lua.org/manual/5.4/manual.html#2.4).
-
-	Returns the type of the pushed value."
 
 	^ self
 		  ffiCall:
 		  #( int lua_getfield #( void #* L #, int index #, const char #* k ) )
 		  module: LibLua
-]
-
-{ #category : 'API - C' }
-LibLuaFFIImplementation >> lua: L get: index field: k remove: shouldRemove [
-
-	| type tblindex |
-	tblindex := self lua_absindex: L index: index.
-	type := self lua: L get: index field: k.
-
-	shouldRemove ifTrue: [ self lua_remove: L at: tblindex ].
-
-	^ type
 ]
 
 { #category : 'API - C' }
@@ -669,31 +541,6 @@ LibLuaFFIImplementation >> lua: L next: idx [
 
 { #category : 'API - C' }
 LibLuaFFIImplementation >> lua: L pcallArgumentsSize: nargs resultsSize: nresults msgh: errfunc [
-	"From https://www.lua.org/manual/5.4/manual.html#lua_pcall,
-
-		int lua_pcall (lua_State *L, int nargs, int nresults, int msgh);
-
-	Calls a function (or a callable object) in protected mode.
-
-	Both nargs and nresults have the same meaning as in lua_call. 
-	If there are no errors during the call, lua_pcall behaves exactly 
-	like lua_call. However, if there is any error, lua_pcall catches 
-	it, pushes a single value on the stack (the error object), and returns 
-	an error code. Like lua_call, lua_pcall always removes the function and 
-	its arguments from the stack.
-
-	If msgh is 0, then the error object returned on the stack is exactly the 
-	original error object. Otherwise, msgh is the stack index of a message handler. 
-	(This index cannot be a pseudo-index.) In case of runtime errors, this handler 
-	will be called with the error object and its return value will be the object 
-	returned on the stack by lua_pcall.
-
-	Typically, the message handler is used to add more debug information to the error 
-	object, such as a stack traceback. Such information cannot be gathered after the 
-	return of lua_pcall, since by then the stack has unwound.
-
-	The lua_pcall function returns one of the following status codes: 
-	LUA_OK, LUA_ERRRUN, LUA_ERRMEM, or LUA_ERRERR."
 
 	^ self
 		  lua_pcallk: L
@@ -1065,21 +912,11 @@ LibLuaFFIImplementation >> luaL: L checkstring: arg [
 { #category : 'API - auxiliary' }
 LibLuaFFIImplementation >> luaL: L dostring: s [
 
-	"From https://www.lua.org/manual/5.4/manual.html#luaL_dostring,
-	
-		int luaL_dostring (lua_State *L, const char *str);
-	
-	Loads and runs the given string. It is defined as the following macro:
-
-     (luaL_loadstring(L, str) || lua_pcall(L, 0, LUA_MULTRET, 0))
-
-	It returns LUA_OK if there are no errors, or an error code in case of errors (see §4.4.1)."
-
 	| status |
 	status := self luaL: L loadstring: s.
 
 	^ status = self LUA_OK
-		  ifTrue: [ 
+		  ifTrue: [
 			  self
 				  lua: L
 				  pcallArgumentsSize: 0
@@ -1125,16 +962,6 @@ LibLuaFFIImplementation >> luaL: L loadfile: filename x: mode [
 
 { #category : 'API - auxiliary' }
 LibLuaFFIImplementation >> luaL: L loadstring: s [
-	"From https://www.lua.org/manual/5.4/manual.html#luaL_loadstring,
-	
-		int luaL_loadstring (lua_State *L, const char *s);
-		
-	Loads a string as a Lua chunk. This function uses lua_load to load the 
-	chunk in the zero-terminated string s.
-
-	This function returns the same results as lua_load.
-
-	Also as lua_load, this function only loads the chunk; it does not run it."
 
 	^ self
 		  ffiCall:
@@ -1576,12 +1403,6 @@ LibLuaFFIImplementation >> table: L at: idx do: aBlock [
 		aBlock value: -2 value: -1.
 
 		self lua: L pop: 1 ]
-]
-
-{ #category : 'accessing' }
-LibLuaFFIImplementation >> typeAt: aTypeKey [
-
-	^ Types at: aTypeKey
 ]
 
 { #category : 'API' }

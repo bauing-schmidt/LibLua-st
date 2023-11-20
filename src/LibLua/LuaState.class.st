@@ -23,21 +23,12 @@ LuaState >> booleanAt: anIndex [
 ]
 
 { #category : 'accessing' }
-LuaState >> checkTypeAt: anIndex equals: typeName [ 
+LuaState >> checkTypeAt: anIndex equals: type [
 
 	^ self liblua
-		luaL: self externalAddress
-		check: anIndex
-		type: (self typeIdOfTypeName: typeName)
-]
-
-{ #category : 'accessing' }
-LuaState >> checkTypeAt: anIndex equalsId: typeId [ 
-
-	^ self liblua
-		luaL: self externalAddress
-		check: anIndex
-		type: typeId
+		  luaL: self externalAddress
+		  check: anIndex
+		  type: type
 ]
 
 { #category : 'accessing' }
@@ -292,12 +283,6 @@ LuaState >> tableAt: anIndex do: aBlock [
 LuaState >> typeIdOf: anObject [ 
 
 	^ self liblua lua:  self externalAddress type: anObject
-]
-
-{ #category : 'accessing' }
-LuaState >> typeIdOfTypeName: typeName [ 
-
-	^ self liblua typeAt: typeName
 ]
 
 { #category : 'accessing' }
