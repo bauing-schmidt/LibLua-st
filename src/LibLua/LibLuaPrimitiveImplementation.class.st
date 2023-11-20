@@ -395,97 +395,25 @@ LibLuaPrimitiveImplementation >> _on: state at: i cache: cache [
 	^ self lua_typename: state at: i
 ]
 
-{ #category : 'API' }
-LibLuaPrimitiveImplementation >> append: dir onPackagePathOfLua: state [
-
-	^ self
-		  luaL: state
-		  dostring: 'package.path = package.path .. ";' , dir , '"'
-]
-
-{ #category : 'API' }
-LibLuaPrimitiveImplementation >> assert: aBlock [
-
-	^ super assert: (aBlock cull: self) = self LUA_OK
-]
-
 { #category : 'API - C' }
 LibLuaPrimitiveImplementation >> lua: L compare: index1 another: index2 operator: op [
-	"From https://www.lua.org/manual/5.4/manual.html#lua_compare,
-	
-		int lua_compare (lua_State *L, int index1, int index2, int op);
-	
-	Compares two Lua values. Returns 1 if the value at index index1 satisfies 
-	op when compared with the value at index index2, following the semantics of 
-	the corresponding Lua operator (that is, it may call metamethods). 
-	Otherwise returns 0. Also returns 0 if any of the indices is not valid.
 
-	The value of op must be one of the following constants:
-
-		• LUA_OPEQ: compares for equality (==)
-		• LUA_OPLT: compares for less than (<)
-		• LUA_OPLE: compares for less or equal (<=)"
-
-	^ self
-		  ffiCall:
-		  #( int lua_compare #( void #* L #, int index1 #, int index2 #, int
-		        op ) )
-		  module: LibLua
-]
-
-{ #category : 'API - C' }
-LibLuaPrimitiveImplementation >> lua: L compare: index1 eq: index2 [
-
-	^ self
-		  lua: L
-		  compare: index1
-		  another: index2
-		  operator: self LUA_OPEQ
+	<primitive: 'primitive_lua_compare' module: 'LuaPlugin'>
+	self primitiveFail
 ]
 
 { #category : 'API - C' }
 LibLuaPrimitiveImplementation >> lua: L copy: fromidx to: toidx [
-	"From https://www.lua.org/manual/5.4/manual.html#lua_copy,
-	
-		void lua_copy (lua_State *L, int fromidx, int toidx);
-	
-	Copies the element at index fromidx into the valid index toidx, replacing the 
-	value at that position. Values at other positions are not affected."
 
-	^ self
-		  ffiCall:
-		  #( void lua_copy #( void #* L #, int fromidx #, int toidx ) )
-		  module: LibLua
+	<primitive: 'primitive_lua_copy' module: 'LuaPlugin'>
+	self primitiveFail
 ]
 
 { #category : 'API - C' }
 LibLuaPrimitiveImplementation >> lua: L get: index field: k [
-	"From https://www.lua.org/manual/5.4/manual.html#lua_getfield,
-	
-		int lua_getfield (lua_State *L, int index, const char *k);
-	
-	Pushes onto the stack the value t[k], where t is the value at the given index. 
-	As in Lua, this function may trigger a metamethod for the ""index"" event 
-	(see https://www.lua.org/manual/5.4/manual.html#2.4).
 
-	Returns the type of the pushed value."
-
-	^ self
-		  ffiCall:
-		  #( int lua_getfield #( void #* L #, int index #, const char #* k ) )
-		  module: LibLua
-]
-
-{ #category : 'API - C' }
-LibLuaPrimitiveImplementation >> lua: L get: index field: k remove: shouldRemove [
-
-	| type tblindex |
-	tblindex := self lua_absindex: L index: index.
-	type := self lua: L get: index field: k.
-
-	shouldRemove ifTrue: [ self lua_remove: L at: tblindex ].
-
-	^ type
+	<primitive: 'primitive_lua_getfield' module: 'LuaPlugin'>
+	self primitiveFail
 ]
 
 { #category : 'API - C' }
@@ -500,9 +428,8 @@ LibLuaPrimitiveImplementation >> lua: L get: index i: i [
 
 	Returns the type of the pushed value."
 
-	^ self
-		  ffiCall: #( int lua_geti #( void #* L #, int index #, long i ) )
-		  module: LibLua
+	<primitive: 'primitive_lua_geti' module: 'LuaPlugin'>
+	self primitiveFail
 ]
 
 { #category : 'API - C' }
@@ -515,10 +442,8 @@ LibLuaPrimitiveImplementation >> lua: L getglobal: name [
 
 	Returns the type of that value."
 
-	^ self
-		  ffiCall:
-		  #( int lua_getglobal #( void #* L #, const char #* name ) )
-		  module: LibLua
+	<primitive: 'primitive_lua_getglobal' module: 'LuaPlugin'>
+	self primitiveFail
 ]
 
 { #category : 'API - C' }
@@ -535,9 +460,8 @@ LibLuaPrimitiveImplementation >> lua: L gettable: index [
 
 	Returns the type of the pushed value."
 
-	^ self
-		  ffiCall: #( int lua_gettable #( void #* L #, int index ) )
-		  module: LibLua
+	<primitive: 'primitive_lua_gettable' module: 'LuaPlugin'>
+	self primitiveFail
 ]
 
 { #category : 'API - C' }
@@ -549,9 +473,8 @@ LibLuaPrimitiveImplementation >> lua: L isinteger: index [
 	Returns 1 if the value at the given index is an integer 
 	(that is, the value is a number and is represented as an integer), and 0 otherwise."
 
-	^ self
-		  ffiCall: #( int lua_isinteger #( void #* L #, int index ) )
-		  module: LibLua
+	<primitive: 'primitive_lua_gettable' module: 'LuaPlugin'>
+	self primitiveFail
 ]
 
 { #category : 'API - C' }
@@ -564,9 +487,8 @@ LibLuaPrimitiveImplementation >> lua: L len: index [
 	the '#' operator in Lua (see §3.4.7) and may trigger a metamethod for 
 	the ""length"" event (see §2.4). The result is pushed on the stack."
 
-	^ self
-		  ffiCall: #( void lua_len #( void #* L #, int index ) )
-		  module: LibLua
+	<primitive: 'primitive_lua_len' module: 'LuaPlugin'>
+	self primitiveFail
 ]
 
 { #category : 'API - C' }
@@ -599,9 +521,9 @@ LibLuaPrimitiveImplementation >> lua: L next: idx [
 	This function may raise an error if the given key is neither nil nor present in the table. 
 	See function next for the caveats of modifying the table during its traversal."
 
-	^ self
-		  ffiCall: #( int lua_next #( void #* L #, int idx ) )
-		  module: LibLua
+	
+	<primitive: 'primitive_lua_len' module: 'LuaPlugin'>
+	self primitiveFail
 ]
 
 { #category : 'API - C' }
@@ -948,27 +870,8 @@ LibLuaPrimitiveImplementation >> luaL: L checkstring: arg [
 { #category : 'API - auxiliary' }
 LibLuaPrimitiveImplementation >> luaL: L dostring: s [
 
-	"From https://www.lua.org/manual/5.4/manual.html#luaL_dostring,
-	
-		int luaL_dostring (lua_State *L, const char *str);
-	
-	Loads and runs the given string. It is defined as the following macro:
-
-     (luaL_loadstring(L, str) || lua_pcall(L, 0, LUA_MULTRET, 0))
-
-	It returns LUA_OK if there are no errors, or an error code in case of errors (see §4.4.1)."
-
-	| status |
-	status := self luaL: L loadstring: s.
-
-	^ status = self LUA_OK
-		  ifTrue: [ 
-			  self
-				  lua: L
-				  pcallArgumentsSize: 0
-				  resultsSize: self LUA_MULTRET
-				  msgh: 0 ]
-		  ifFalse: [ status ]
+	<primitive: 'primitive_luaL_dostring' module: 'LuaPlugin'>
+	self primitiveFail
 ]
 
 { #category : 'API - auxiliary' }
@@ -1008,21 +911,9 @@ LibLuaPrimitiveImplementation >> luaL: L loadfile: filename x: mode [
 
 { #category : 'API - auxiliary' }
 LibLuaPrimitiveImplementation >> luaL: L loadstring: s [
-	"From https://www.lua.org/manual/5.4/manual.html#luaL_loadstring,
-	
-		int luaL_loadstring (lua_State *L, const char *s);
-		
-	Loads a string as a Lua chunk. This function uses lua_load to load the 
-	chunk in the zero-terminated string s.
 
-	This function returns the same results as lua_load.
-
-	Also as lua_load, this function only loads the chunk; it does not run it."
-
-	^ self
-		  ffiCall:
-		  #( int luaL_loadstring #( void #* L #, const char #* s ) )
-		  module: LibLua
+	<primitive: 'primitive_luaL_loadstring' module: 'LuaPlugin'>
+	self primitiveFail
 ]
 
 { #category : 'API - auxiliary' }
