@@ -8,393 +8,6 @@ Class {
 	#package : 'LibLua'
 }
 
-{ #category : 'constants - thread status' }
-LibLuaFFIImplementation >> LUA_ERRERR [
-
-	^ 5
-]
-
-{ #category : 'constants - thread status' }
-LibLuaFFIImplementation >> LUA_ERRMEM [
-
-	^ 4
-]
-
-{ #category : 'constants - thread status' }
-LibLuaFFIImplementation >> LUA_ERRRUN [
-
-	^ 2
-]
-
-{ #category : 'constants - thread status' }
-LibLuaFFIImplementation >> LUA_ERRSYNTAX [
-
-	^ 3
-]
-
-{ #category : 'constants - gc' }
-LibLuaFFIImplementation >> LUA_GCCOLLECT [
-
-	^ 2
-]
-
-{ #category : 'constants - gc' }
-LibLuaFFIImplementation >> LUA_GCCOUNT [
-
-	^ 3
-]
-
-{ #category : 'constants - gc' }
-LibLuaFFIImplementation >> LUA_GCCOUNTB [
-
-	^ 4
-]
-
-{ #category : 'constants - gc' }
-LibLuaFFIImplementation >> LUA_GCGEN [
-
-	^ 10
-]
-
-{ #category : 'constants - gc' }
-LibLuaFFIImplementation >> LUA_GCINC [
-
-	^ 11
-]
-
-{ #category : 'constants - gc' }
-LibLuaFFIImplementation >> LUA_GCISRUNNING [
-
-	^ 9
-]
-
-{ #category : 'constants - gc' }
-LibLuaFFIImplementation >> LUA_GCRESTART [
-
-	^ 1
-]
-
-{ #category : 'constants - gc' }
-LibLuaFFIImplementation >> LUA_GCSETPAUSE [
-
-	^ 6
-]
-
-{ #category : 'constants - gc' }
-LibLuaFFIImplementation >> LUA_GCSETSTEPMUL [
-
-	^ 7
-]
-
-{ #category : 'constants - gc' }
-LibLuaFFIImplementation >> LUA_GCSTEP [
-
-	^ 5
-]
-
-{ #category : 'constants - gc' }
-LibLuaFFIImplementation >> LUA_GCSTOP [
-
-	^ 0
-]
-
-{ #category : 'constants - event codes' }
-LibLuaFFIImplementation >> LUA_HOOKCALL [
-
-	^ 0
-]
-
-{ #category : 'constants - event codes' }
-LibLuaFFIImplementation >> LUA_HOOKCOUNT [
-
-	^ 3
-]
-
-{ #category : 'constants - event codes' }
-LibLuaFFIImplementation >> LUA_HOOKLINE [
-
-	^ 2
-]
-
-{ #category : 'constants - event codes' }
-LibLuaFFIImplementation >> LUA_HOOKRET [
-
-	^ 1
-]
-
-{ #category : 'constants - event codes' }
-LibLuaFFIImplementation >> LUA_HOOKTAILCALL [
-
-	^ 4
-]
-
-{ #category : 'constants - event masks' }
-LibLuaFFIImplementation >> LUA_MASKCALL [
-
-	^ 1 << self LUA_HOOKCALL
-]
-
-{ #category : 'constants - event masks' }
-LibLuaFFIImplementation >> LUA_MASKCOUNT [
-
-	^ 1 << self LUA_HOOKCOUNT
-]
-
-{ #category : 'constants - event masks' }
-LibLuaFFIImplementation >> LUA_MASKLINE [
-
-	^ 1 << self LUA_HOOKLINE
-]
-
-{ #category : 'constants - event masks' }
-LibLuaFFIImplementation >> LUA_MASKRET [
-
-	^ 1 << self LUA_HOOKRET
-]
-
-{ #category : 'constants - generic' }
-LibLuaFFIImplementation >> LUA_MINSTACK [
-
-	^ 20
-]
-
-{ #category : 'constants - generic' }
-LibLuaFFIImplementation >> LUA_MULTRET [
-
-	"option for multiple returns in 'lua_pcall' and 'lua_call'"
-
-	^ -1
-]
-
-{ #category : 'constants - generic' }
-LibLuaFFIImplementation >> LUA_NUMTYPES [
-
-	^ 9
-]
-
-{ #category : 'constants - thread status' }
-LibLuaFFIImplementation >> LUA_OK [
-
-	^ 0
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPADD [
-
-	^ 0
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPBAND [
-
-	^ 7
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPBNOT [
-
-	^ 13
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPBOR [
-
-	^ 8
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPBXOR [
-
-	^ 9
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPDIV [
-
-	^ 5
-]
-
-{ #category : 'constants - comparison' }
-LibLuaFFIImplementation >> LUA_OPEQ [
-
-	^ 0
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPIDIV [
-
-	^ 6
-]
-
-{ #category : 'constants - comparison' }
-LibLuaFFIImplementation >> LUA_OPLE [
-
-	^ 2
-]
-
-{ #category : 'constants - comparison' }
-LibLuaFFIImplementation >> LUA_OPLT [
-
-	^ 1
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPMOD [
-
-	^ 3
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPMUL [
-
-	^ 2
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPPOW [
-
-	^ 4
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPSHL [
-
-	^ 10
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPSHR [
-
-	^ 11
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPSUB [
-
-	^ 1
-]
-
-{ #category : 'constants - arith functions' }
-LibLuaFFIImplementation >> LUA_OPUNM [
-
-	^ 12
-]
-
-{ #category : 'constants - types' }
-LibLuaFFIImplementation >> LUA_TBOOLEAN [
-
-	^ 1
-]
-
-{ #category : 'constants - types' }
-LibLuaFFIImplementation >> LUA_TFUNCTION [
-
-	^ 6
-]
-
-{ #category : 'constants - types' }
-LibLuaFFIImplementation >> LUA_TLIGHTUSERDATA [
-
-	^ 2
-]
-
-{ #category : 'constants - types' }
-LibLuaFFIImplementation >> LUA_TNIL [
-
-	^ 0
-]
-
-{ #category : 'constants - types' }
-LibLuaFFIImplementation >> LUA_TNONE [
-
-	^ -1
-]
-
-{ #category : 'constants - types' }
-LibLuaFFIImplementation >> LUA_TNUMBER [
-
-	^ 3
-]
-
-{ #category : 'constants - types' }
-LibLuaFFIImplementation >> LUA_TSTRING [
-
-	^ 4
-]
-
-{ #category : 'constants - types' }
-LibLuaFFIImplementation >> LUA_TTABLE [
-
-	^ 5
-]
-
-{ #category : 'constants - types' }
-LibLuaFFIImplementation >> LUA_TTHREAD [
-
-	^ 8
-]
-
-{ #category : 'constants - types' }
-LibLuaFFIImplementation >> LUA_TUSERDATA [
-
-	^ 7
-]
-
-{ #category : 'constants - thread status' }
-LibLuaFFIImplementation >> LUA_YIELD [
-
-	^ 1
-]
-
-{ #category : 'API' }
-LibLuaFFIImplementation >> _on: state at: i cache: cache [
-
-	| typeid |
-	typeid := self lua: state type: i.
-
-	typeid = self LUA_TNIL ifTrue: [ ^ nil ].
-
-	typeid = self LUA_TBOOLEAN ifTrue: [ 
-		^ (self lua: state toboolean: i) = 1 ].
-
-	(typeid = self LUA_TLIGHTUSERDATA or: [ typeid = self LUA_TUSERDATA ]) 
-		ifTrue: [ ^ self lua_touserdata: state at: i ].
-
-	typeid = self LUA_TNUMBER ifTrue: [ 
-		^ (self lua: state isinteger: i) = 1
-			  ifTrue: [ self lua_tointeger: state at: i ]
-			  ifFalse: [ self lua: state tonumber: i ] ].
-
-	typeid = self LUA_TSTRING ifTrue: [ ^ self lua: state tostring: i ].
-
-	typeid = self LUA_TTABLE ifTrue: [ 
-		| dict keysAreIntegers length |
-		self lua: state len: i.
-		length := self lua_tointeger: state at: -1.
-		self lua: state pop: 1.
-		keysAreIntegers := true.
-		dict := Dictionary new.
-		self table: state at: i do: [ :k :v | 
-			| key value |
-			key := self on: state at: k cache: cache.
-			value := self on: state at: v cache: cache.
-
-			dict at: key put: value.
-			keysAreIntegers := keysAreIntegers and: [ 
-				                   key isInteger and: [ 
-					                   key between: 1 and: length ] ] ].
-
-		^ keysAreIntegers
-			  ifTrue: [ 
-				  | array |
-				  array := Array new: dict size.
-				  dict keysAndValuesDo: [ :k :v | array at: k put: v ].
-				  array ]
-			  ifFalse: [ dict ] ].
-
-	^ self lua_typename: state at: i
-]
-
 { #category : 'API - C' }
 LibLuaFFIImplementation >> lua: L compare: index1 another: index2 operator: op [
 
@@ -582,7 +195,6 @@ LibLuaFFIImplementation >> lua: L setglobal: name [
 
 { #category : 'API - C' }
 LibLuaFFIImplementation >> lua: L to: idx integerx: isnum [
-	"lua_Integer     (lua_tointegerx) (lua_State *L, int idx, int *isnum);"
 
 	^ self
 		  ffiCall:
@@ -592,7 +204,6 @@ LibLuaFFIImplementation >> lua: L to: idx integerx: isnum [
 
 { #category : 'API - C' }
 LibLuaFFIImplementation >> lua: L to: idx lstring: len [
-	"const char     *(lua_tolstring) (lua_State *L, int idx, size_t *len);"
 
 	^ self
 		  ffiCall:
@@ -603,14 +214,6 @@ LibLuaFFIImplementation >> lua: L to: idx lstring: len [
 
 { #category : 'API - C' }
 LibLuaFFIImplementation >> lua: L toboolean: idx [
-	"From https://www.lua.org/manual/5.4/manual.html#lua_toboolean,
-	
-		int lua_toboolean (lua_State *L, int idx);
-		
-	Converts the Lua value at the given index to a C boolean value (0 or 1). 
-	Like all tests in Lua, lua_toboolean returns true for any Lua value different 
-	from false and nil; otherwise it returns false. (If you want to accept only 
-	actual boolean values, use lua_isboolean to test the value's type.)"
 
 	^ self
 		  ffiCall: #( int lua_toboolean #( void #* L #, int idx ) )
@@ -618,35 +221,9 @@ LibLuaFFIImplementation >> lua: L toboolean: idx [
 ]
 
 { #category : 'API - C' }
-LibLuaFFIImplementation >> lua: state tointegerx: idx ifNotInteger: aBlock [
-
-	| pointer value |
-	pointer := 0 pointer.
-
-	value := self lua: state to: idx integerx: pointer.
-
-	^ (pointer boolean8AtOffset: 0)
-		  ifTrue: [ value ]
-		  ifFalse: aBlock
-]
-
-{ #category : 'API - C' }
 LibLuaFFIImplementation >> lua: L tonumber: idx [
 
 	^ self lua_tonumberx: L at: idx isnumpointer: ExternalAddress null
-]
-
-{ #category : 'API - C' }
-LibLuaFFIImplementation >> lua: state tonumberx: idx ifNotNumber: aBlock [
-
-	| pointer value |
-	pointer := ByteArray new: 4.
-
-	value := self lua_tonumberx: state at: idx isnumpointer: pointer.
-
-	^ (pointer int32AtOffset: 0) = 1
-		  ifTrue: [ value ]
-		  ifFalse: aBlock
 ]
 
 { #category : 'API - C' }
@@ -657,14 +234,6 @@ LibLuaFFIImplementation >> lua: L tostring: idx [
 
 { #category : 'API - C' }
 LibLuaFFIImplementation >> lua: L type: index [
-	"From https://www.lua.org/manual/5.4/manual.html#lua_type,
-	
-		int lua_type (lua_State *L, int index);
-	
-	Returns the type of the value in the given valid index, or LUA_TNONE 
-	for a non-valid but acceptable index. The types returned by lua_type are coded 
-	by the following constants defined in lua.h: LUA_TNIL, LUA_TNUMBER, LUA_TBOOLEAN, 
-	LUA_TSTRING, LUA_TTABLE, LUA_TFUNCTION, LUA_TUSERDATA, LUA_TTHREAD, and LUA_TLIGHTUSERDATA."
 
 	^ self
 		  ffiCall: #( int lua_type #( void #* L #, int index ) )
@@ -673,12 +242,6 @@ LibLuaFFIImplementation >> lua: L type: index [
 
 { #category : 'API - C' }
 LibLuaFFIImplementation >> lua: L typename: tp [
-	"From https://www.lua.org/manual/5.4/manual.html#lua_typename,
-	
-		const char *lua_typename (lua_State *L, int tp);
-	
-	Returns the name of the type encoded by the value tp, which must 
-	be one the values returned by lua_type."
 
 	^ self
 		  ffiCall: #( const char #* lua_typename #( void #* L #, int tp ) )
@@ -804,15 +367,8 @@ LibLuaFFIImplementation >> luaL: L loadstring: s [
 
 { #category : 'API - auxiliary' }
 LibLuaFFIImplementation >> luaL_openlibs: L [
-	"void (luaL_openlibs) (lua_State *L);"
 
 	^ self ffiCall: #( void luaL_openlibs #( void #* L ) ) module: LibLua
-]
-
-{ #category : 'API - auxiliary' }
-LibLuaFFIImplementation >> luaL_requiref: L name: modname [
-
-	^ self luaL_requiref: L name: modname let: modname
 ]
 
 { #category : 'API - auxiliary' }
@@ -837,41 +393,6 @@ LibLuaFFIImplementation >> luaL_requiref: L name: modname function: openf global
 ]
 
 { #category : 'API - auxiliary' }
-LibLuaFFIImplementation >> luaL_requiref: L name: modname let: varname [
-
-	^ self
-		  luaL_requiref: L
-		  name: modname
-		  let: varname
-		  onErrorDo: [ :S | 
-			  | errorMsg |
-			  errorMsg := self on: S at: -1.
-			  self error: errorMsg ]
-]
-
-{ #category : 'API - auxiliary' }
-LibLuaFFIImplementation >> luaL_requiref: L name: modname let: varname onErrorDo: aBlock [
-
-	| luaCode |
-	self
-		luaL_requiref: L
-		name: modname
-		function: (self fficallbackOnBlock: [ :S | 
-				 luaCode := self
-					            on: S push: #require;
-					            "get the module name"lua: S pushvalue: -2;
-					            lua_pcall: S nargs: 1 nresults: 1.
-				 1 ])
-		global: false asBit.
-
-	luaCode == self LUA_OK
-		ifTrue: [ self lua: L setglobal: varname ]
-		ifFalse: [ aBlock cull: L ].
-
-	^ nil
-]
-
-{ #category : 'API - auxiliary' }
 LibLuaFFIImplementation >> luaLnewstate [
 
 	^ self ffiCall: #( void #* #luaL_newstate #( void ) ) module: LibLua
@@ -879,12 +400,6 @@ LibLuaFFIImplementation >> luaLnewstate [
 
 { #category : 'API - C' }
 LibLuaFFIImplementation >> lua_absindex: L index: idx [
-	"From https://www.lua.org/manual/5.4/manual.html#lua_absindex,
-	
-		int lua_absindex (lua_State *L, int idx);	[-0, +0, –]
-	
-	Converts the acceptable index idx into an equivalent absolute 
-	index (that is, one that does not depend on the stack size)."
 
 	^ self
 		  ffiCall: #( int lua_absindex #( void #* L #, int idx ) )
@@ -895,26 +410,6 @@ LibLuaFFIImplementation >> lua_absindex: L index: idx [
 LibLuaFFIImplementation >> lua_close: L [
 
 	^ self ffiCall: #( void lua_close #( void #* L ) ) module: LibLua
-]
-
-{ #category : 'API - C' }
-LibLuaFFIImplementation >> lua_compare_le: L index: index1 anotherIndex: index2 [
-
-	^ self
-		  lua: L
-		  compare: index1
-		  another: index2
-		  operator: self LUA_OPLE
-]
-
-{ #category : 'API - C' }
-LibLuaFFIImplementation >> lua_compare_lt: L index: index1 anotherIndex: index2 [
-
-	^ self
-		  lua: L
-		  compare: index1
-		  another: index2
-		  operator: self LUA_OPLT
 ]
 
 { #category : 'API - C' }
@@ -985,36 +480,6 @@ LibLuaFFIImplementation >> lua_newtable: L [
 	It is equivalent to lua_createtable(L, 0, 0)."
 
 	^ self lua_createtable: L narr: 0 nrec: 0
-]
-
-{ #category : 'API - C' }
-LibLuaFFIImplementation >> lua_pcall: L nargs: nargs lets: names [
-
-	| flag |
-	flag := self lua_pcall: L nargs: nargs nresults: names size.
-
-	flag = self LUA_OK ifTrue: [ 
-		names reverseDo: [ :var | self lua: L setglobal: var asString ] ].
-
-	^ flag
-]
-
-{ #category : 'API - C' }
-LibLuaFFIImplementation >> lua_pcall: L nargs: nargs nresults: nresults [
-
-	^ self
-		  lua: L
-		  pcallArgumentsSize: nargs
-		  resultsSize: nresults
-		  msgh: 0
-]
-
-{ #category : 'API - C' }
-LibLuaFFIImplementation >> lua_pcall: L valueWithArguments: args lets: names [
-
-	args do: [ :arg | self on: L push: arg ].
-
-	^ self lua_pcall: L nargs: args size lets: names
 ]
 
 { #category : 'API - C' }
@@ -1109,18 +574,11 @@ LibLuaFFIImplementation >> lua_settop: L at: idx [
 { #category : 'API - C' }
 LibLuaFFIImplementation >> lua_tointeger: L at: index [
 
-	"From https://www.lua.org/manual/5.4/manual.html#lua_tointeger,
-	
-		lua_Integer lua_tointeger (lua_State *L, int index);
-		
-	Equivalent to lua_tointegerx with isnum equal to NULL."
-
 	^ self lua: L to: index integerx: ExternalAddress null
 ]
 
 { #category : 'API - C' }
 LibLuaFFIImplementation >> lua_tonumberx: L at: idx isnumpointer: isnum [
-	"lua_Number lua_tonumberx (lua_State *L, int idx, int *pisnum)"
 
 	^ self
 		  ffiCall:
@@ -1165,92 +623,4 @@ LibLuaFFIImplementation >> lua_touserdata: L at: index [
 LibLuaFFIImplementation >> lua_typename: L at: i [
 
 	^ self lua: L typename: (self lua: L type: i)
-]
-
-{ #category : 'API' }
-LibLuaFFIImplementation >> on: state assertLUAOK: aBlock [
-
-	(aBlock cull: self) = self LUA_OK ifFalse: [
-		self assert: false description: (self on: state at: -1) ]
-]
-
-{ #category : 'API' }
-LibLuaFFIImplementation >> on: state at: i [
-
-	^ self on: state at: i cache: IdentityDictionary new
-]
-
-{ #category : 'API' }
-LibLuaFFIImplementation >> on: state at: i cache: cache [
-
-	| pointerAsInteger |
-	pointerAsInteger := (self lua_topointer: state at: i) asInteger.
-
-	^ pointerAsInteger = 0
-		  ifTrue: [ self _on: state at: i cache: cache ]
-		  ifFalse: [ 
-			  | witness obj |
-			  witness := Object new.
-			  obj := cache at: pointerAsInteger ifAbsentPut: [ witness ].
-
-			  obj == witness
-				  ifTrue: [ 
-					  | reified |
-					  reified := self _on: state at: i cache: cache.
-					  witness become: reified.
-					  witness ]
-				  ifFalse: [ obj "easy case: already seen so return it." ] ]
-]
-
-{ #category : 'API' }
-LibLuaFFIImplementation >> on: state push: anObject [
-
-	^ anObject pushOnLua: state liblua: self
-]
-
-{ #category : 'API' }
-LibLuaFFIImplementation >> table: L at: idx do: aBlock [
-
-	"A typical table traversal looks like this:
-
-     /* table is in the stack at index 't' */
-     lua_pushnil(L);  /* first key */
-     while (lua_next(L, t) != 0) {
-       /* uses 'key' (at index -2) and 'value' (at index -1) */
-       printf(""%s - %s\n"",
-              lua_typename(L, lua_type(L, -2)),
-              lua_typename(L, lua_type(L, -1)));
-       /* removes 'value'; keeps 'key' for next iteration */
-       lua_pop(L, 1);
-     }
-	"
-
-	| index |
-	self lua_pushnil: L.
-
-	index := idx negative
-		         ifTrue: [ idx - 1 ]
-		         ifFalse: [ idx ].
-
-	[ (self lua: L next: index) = 0 ] whileFalse: [ 
-		aBlock value: -2 value: -1.
-
-		self lua: L pop: 1 ]
-]
-
-{ #category : 'API' }
-LibLuaFFIImplementation >> withOpenedLibsStateDo: aBlock [
-
-	^ self withStateDo: [ :state | 
-		  self luaL_openlibs: state.
-		  aBlock value: state ]
-]
-
-{ #category : 'API' }
-LibLuaFFIImplementation >> withStateDo: aBlock [
-
-	| state |
-	state := self luaLnewstate.
-
-	^ [ aBlock value: state ] ensure: [ self lua_close: state ]
 ]

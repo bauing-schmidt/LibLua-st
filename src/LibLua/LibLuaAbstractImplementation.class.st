@@ -8,6 +8,393 @@ Class {
 	#package : 'LibLua'
 }
 
+{ #category : 'constants - thread status' }
+LibLuaAbstractImplementation >> LUA_ERRERR [
+
+	^ 5
+]
+
+{ #category : 'constants - thread status' }
+LibLuaAbstractImplementation >> LUA_ERRMEM [
+
+	^ 4
+]
+
+{ #category : 'constants - thread status' }
+LibLuaAbstractImplementation >> LUA_ERRRUN [
+
+	^ 2
+]
+
+{ #category : 'constants - thread status' }
+LibLuaAbstractImplementation >> LUA_ERRSYNTAX [
+
+	^ 3
+]
+
+{ #category : 'constants - gc' }
+LibLuaAbstractImplementation >> LUA_GCCOLLECT [
+
+	^ 2
+]
+
+{ #category : 'constants - gc' }
+LibLuaAbstractImplementation >> LUA_GCCOUNT [
+
+	^ 3
+]
+
+{ #category : 'constants - gc' }
+LibLuaAbstractImplementation >> LUA_GCCOUNTB [
+
+	^ 4
+]
+
+{ #category : 'constants - gc' }
+LibLuaAbstractImplementation >> LUA_GCGEN [
+
+	^ 10
+]
+
+{ #category : 'constants - gc' }
+LibLuaAbstractImplementation >> LUA_GCINC [
+
+	^ 11
+]
+
+{ #category : 'constants - gc' }
+LibLuaAbstractImplementation >> LUA_GCISRUNNING [
+
+	^ 9
+]
+
+{ #category : 'constants - gc' }
+LibLuaAbstractImplementation >> LUA_GCRESTART [
+
+	^ 1
+]
+
+{ #category : 'constants - gc' }
+LibLuaAbstractImplementation >> LUA_GCSETPAUSE [
+
+	^ 6
+]
+
+{ #category : 'constants - gc' }
+LibLuaAbstractImplementation >> LUA_GCSETSTEPMUL [
+
+	^ 7
+]
+
+{ #category : 'constants - gc' }
+LibLuaAbstractImplementation >> LUA_GCSTEP [
+
+	^ 5
+]
+
+{ #category : 'constants - gc' }
+LibLuaAbstractImplementation >> LUA_GCSTOP [
+
+	^ 0
+]
+
+{ #category : 'constants - event codes' }
+LibLuaAbstractImplementation >> LUA_HOOKCALL [
+
+	^ 0
+]
+
+{ #category : 'constants - event codes' }
+LibLuaAbstractImplementation >> LUA_HOOKCOUNT [
+
+	^ 3
+]
+
+{ #category : 'constants - event codes' }
+LibLuaAbstractImplementation >> LUA_HOOKLINE [
+
+	^ 2
+]
+
+{ #category : 'constants - event codes' }
+LibLuaAbstractImplementation >> LUA_HOOKRET [
+
+	^ 1
+]
+
+{ #category : 'constants - event codes' }
+LibLuaAbstractImplementation >> LUA_HOOKTAILCALL [
+
+	^ 4
+]
+
+{ #category : 'constants - event masks' }
+LibLuaAbstractImplementation >> LUA_MASKCALL [
+
+	^ 1 << self LUA_HOOKCALL
+]
+
+{ #category : 'constants - event masks' }
+LibLuaAbstractImplementation >> LUA_MASKCOUNT [
+
+	^ 1 << self LUA_HOOKCOUNT
+]
+
+{ #category : 'constants - event masks' }
+LibLuaAbstractImplementation >> LUA_MASKLINE [
+
+	^ 1 << self LUA_HOOKLINE
+]
+
+{ #category : 'constants - event masks' }
+LibLuaAbstractImplementation >> LUA_MASKRET [
+
+	^ 1 << self LUA_HOOKRET
+]
+
+{ #category : 'constants - generic' }
+LibLuaAbstractImplementation >> LUA_MINSTACK [
+
+	^ 20
+]
+
+{ #category : 'constants - generic' }
+LibLuaAbstractImplementation >> LUA_MULTRET [
+
+	"option for multiple returns in 'lua_pcall' and 'lua_call'"
+
+	^ -1
+]
+
+{ #category : 'constants - generic' }
+LibLuaAbstractImplementation >> LUA_NUMTYPES [
+
+	^ 9
+]
+
+{ #category : 'constants - thread status' }
+LibLuaAbstractImplementation >> LUA_OK [
+
+	^ 0
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPADD [
+
+	^ 0
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPBAND [
+
+	^ 7
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPBNOT [
+
+	^ 13
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPBOR [
+
+	^ 8
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPBXOR [
+
+	^ 9
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPDIV [
+
+	^ 5
+]
+
+{ #category : 'constants - comparison' }
+LibLuaAbstractImplementation >> LUA_OPEQ [
+
+	^ 0
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPIDIV [
+
+	^ 6
+]
+
+{ #category : 'constants - comparison' }
+LibLuaAbstractImplementation >> LUA_OPLE [
+
+	^ 2
+]
+
+{ #category : 'constants - comparison' }
+LibLuaAbstractImplementation >> LUA_OPLT [
+
+	^ 1
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPMOD [
+
+	^ 3
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPMUL [
+
+	^ 2
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPPOW [
+
+	^ 4
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPSHL [
+
+	^ 10
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPSHR [
+
+	^ 11
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPSUB [
+
+	^ 1
+]
+
+{ #category : 'constants - arith functions' }
+LibLuaAbstractImplementation >> LUA_OPUNM [
+
+	^ 12
+]
+
+{ #category : 'constants - types' }
+LibLuaAbstractImplementation >> LUA_TBOOLEAN [
+
+	^ 1
+]
+
+{ #category : 'constants - types' }
+LibLuaAbstractImplementation >> LUA_TFUNCTION [
+
+	^ 6
+]
+
+{ #category : 'constants - types' }
+LibLuaAbstractImplementation >> LUA_TLIGHTUSERDATA [
+
+	^ 2
+]
+
+{ #category : 'constants - types' }
+LibLuaAbstractImplementation >> LUA_TNIL [
+
+	^ 0
+]
+
+{ #category : 'constants - types' }
+LibLuaAbstractImplementation >> LUA_TNONE [
+
+	^ -1
+]
+
+{ #category : 'constants - types' }
+LibLuaAbstractImplementation >> LUA_TNUMBER [
+
+	^ 3
+]
+
+{ #category : 'constants - types' }
+LibLuaAbstractImplementation >> LUA_TSTRING [
+
+	^ 4
+]
+
+{ #category : 'constants - types' }
+LibLuaAbstractImplementation >> LUA_TTABLE [
+
+	^ 5
+]
+
+{ #category : 'constants - types' }
+LibLuaAbstractImplementation >> LUA_TTHREAD [
+
+	^ 8
+]
+
+{ #category : 'constants - types' }
+LibLuaAbstractImplementation >> LUA_TUSERDATA [
+
+	^ 7
+]
+
+{ #category : 'constants - thread status' }
+LibLuaAbstractImplementation >> LUA_YIELD [
+
+	^ 1
+]
+
+{ #category : 'API' }
+LibLuaAbstractImplementation >> _on: state at: i cache: cache [
+
+	| typeid |
+	typeid := self lua: state type: i.
+
+	typeid = self LUA_TNIL ifTrue: [ ^ nil ].
+
+	typeid = self LUA_TBOOLEAN ifTrue: [ 
+		^ (self lua: state toboolean: i) = 1 ].
+
+	(typeid = self LUA_TLIGHTUSERDATA or: [ typeid = self LUA_TUSERDATA ]) 
+		ifTrue: [ ^ self lua_touserdata: state at: i ].
+
+	typeid = self LUA_TNUMBER ifTrue: [ 
+		^ (self lua: state isinteger: i) = 1
+			  ifTrue: [ self lua_tointeger: state at: i ]
+			  ifFalse: [ self lua: state tonumber: i ] ].
+
+	typeid = self LUA_TSTRING ifTrue: [ ^ self lua: state tostring: i ].
+
+	typeid = self LUA_TTABLE ifTrue: [ 
+		| dict keysAreIntegers length |
+		self lua: state len: i.
+		length := self lua_tointeger: state at: -1.
+		self lua: state pop: 1.
+		keysAreIntegers := true.
+		dict := Dictionary new.
+		self table: state at: i do: [ :k :v | 
+			| key value |
+			key := self on: state at: k cache: cache.
+			value := self on: state at: v cache: cache.
+
+			dict at: key put: value.
+			keysAreIntegers := keysAreIntegers and: [ 
+				                   key isInteger and: [ 
+					                   key between: 1 and: length ] ] ].
+
+		^ keysAreIntegers
+			  ifTrue: [ 
+				  | array |
+				  array := Array new: dict size.
+				  dict keysAndValuesDo: [ :k :v | array at: k put: v ].
+				  array ]
+			  ifFalse: [ dict ] ].
+
+	^ self lua_typename: state at: i
+]
+
 { #category : 'API' }
 LibLuaAbstractImplementation >> append: dir onPackageCPathOfLua: state [
 
@@ -415,6 +802,139 @@ LibLuaAbstractImplementation >> lua: L setglobal: name [
 ]
 
 { #category : 'API - C' }
+LibLuaAbstractImplementation >> lua: L to: idx integerx: isnum [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_tointegerx,
+	
+		lua_Integer lua_tointegerx (lua_State *L, int index, int *isnum);
+
+	Converts the Lua value at the given index to the signed integral type lua_Integer. 
+	The Lua value must be an integer, or a number or string convertible to an integer 
+	(see §3.4.3); otherwise, lua_tointegerx returns 0.
+
+	If isnum is not NULL, its referent is assigned a boolean value that indicates whether the operation succeeded."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua: L to: idx lstring: len [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_tolstring,
+	
+		const char *lua_tolstring (lua_State *L, int index, size_t *len);
+
+	Converts the Lua value at the given index to a C string. If len is not NULL, 
+	it sets *len with the string length. The Lua value must be a string or a number; 
+	otherwise, the function returns NULL. If the value is a number, then lua_tolstring 
+	also changes the actual value in the stack to a string. (This change confuses 
+	lua_next when lua_tolstring is applied to keys during a table traversal.)
+
+	lua_tolstring returns a pointer to a string inside the Lua state (see §4.1.3). 
+	This string always has a zero ('\0') after its last character (as in C), 
+	but can contain other zeros in its body."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua: L toboolean: idx [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_toboolean,
+	
+		int lua_toboolean (lua_State *L, int idx);
+		
+	Converts the Lua value at the given index to a C boolean value (0 or 1). 
+	Like all tests in Lua, lua_toboolean returns true for any Lua value different 
+	from false and nil; otherwise it returns false. (If you want to accept only 
+	actual boolean values, use lua_isboolean to test the value's type.)"
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua: state tointegerx: idx ifNotInteger: aBlock [
+
+	| pointer value |
+	pointer := ByteArray new: 4.
+
+	value := self lua: state to: idx integerx: pointer.
+
+	^ (pointer booleanAt: 1)
+		  ifTrue: [ value ]
+		  ifFalse: [ aBlock value ]
+]
+
+{ #category : 'API' }
+LibLuaAbstractImplementation >> lua: L tolstring: idx do: block [
+
+	| pointer string |
+	pointer := ByteArray new: 8.
+
+	string := self lua: L to: idx lstring: pointer.
+
+	^ block value: string value: (pointer unsignedLongLongAt: 1)
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua: L tonumber: idx [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_tonumber,
+	
+		lua_Number lua_tonumber (lua_State *L, int index);
+	
+	Equivalent to lua_tonumberx with isnum equal to NULL."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua: state tonumberx: idx ifNotNumber: aBlock [
+
+	| pointer value |
+	pointer := ByteArray new: 4.
+
+	value := self lua_tonumberx: state at: idx isnumpointer: pointer.
+
+	^ (pointer booleanAt: 1)
+		  ifTrue: [ value ]
+		  ifFalse: [ aBlock value ]
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua: L tostring: idx [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_tostring,
+	
+		const char *lua_tostring (lua_State *L, int index);
+		
+	Equivalent to lua_tolstring with len equal to NULL.	"
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua: L type: index [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_type,
+	
+		int lua_type (lua_State *L, int index);
+	
+	Returns the type of the value in the given valid index, or LUA_TNONE 
+	for a non-valid but acceptable index. The types returned by lua_type are coded 
+	by the following constants defined in lua.h: LUA_TNIL, LUA_TNUMBER, LUA_TBOOLEAN, 
+	LUA_TSTRING, LUA_TTABLE, LUA_TFUNCTION, LUA_TUSERDATA, LUA_TTHREAD, and LUA_TLIGHTUSERDATA."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua: L typename: tp [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_typename,
+	
+		const char *lua_typename (lua_State *L, int tp);
+	
+	Returns the name of the type encoded by the value tp, which must 
+	be one the values returned by lua_type."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
 LibLuaAbstractImplementation >> luaL: L dostring: s [
 
 	"From https://www.lua.org/manual/5.4/manual.html#luaL_dostring,
@@ -444,4 +964,279 @@ LibLuaAbstractImplementation >> luaL: L loadstring: s [
 	Also as lua_load, this function only loads the chunk; it does not run it."
 
 	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> luaL_openlibs: L [
+	"From https://www.lua.org/manual/5.4/manual.html#luaL_openlibs,
+	
+		void luaL_openlibs (lua_State *L);
+
+	Opens all standard Lua libraries into the given state."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - auxiliary' }
+LibLuaAbstractImplementation >> luaL_requiref: L name: modname [
+
+	^ self luaL_requiref: L name: modname let: modname
+]
+
+{ #category : 'API - auxiliary' }
+LibLuaAbstractImplementation >> luaL_requiref: L name: modname let: varname [
+
+	^ self
+		  luaL_requiref: L
+		  name: modname
+		  let: varname
+		  onErrorDo: [ :S | 
+			  | errorMsg |
+			  errorMsg := self on: S at: -1.
+			  self error: errorMsg ]
+]
+
+{ #category : 'API - auxiliary' }
+LibLuaAbstractImplementation >> luaL_requiref: L name: modname let: varname onErrorDo: aBlock [
+
+	| luaCode |
+	self
+		luaL_requiref: L
+		name: modname
+		function: (self fficallbackOnBlock: [ :S | 
+				 luaCode := self
+					            on: S push: #require;
+					            "get the module name"lua: S pushvalue: -2;
+					            lua_pcall: S nargs: 1 nresults: 1.
+				 1 ])
+		global: false asBit.
+
+	luaCode == self LUA_OK
+		ifTrue: [ self lua: L setglobal: varname ]
+		ifFalse: [ aBlock cull: L ].
+
+	^ nil
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> luaLnewstate [
+	"From https://www.lua.org/manual/5.4/manual.html#luaL_newstate,
+	
+		lua_State *luaL_newstate (void);
+		
+	Creates a new Lua state. It calls lua_newstate with an allocator based on the 
+	ISO C allocation functions and then sets a warning function and a panic function 
+	(see §4.4) that print messages to the standard error output.
+
+	Returns the new state, or NULL if there is a memory allocation error."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_absindex: L index: idx [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_absindex,
+	
+		int lua_absindex (lua_State *L, int idx);	[-0, +0, –]
+	
+	Converts the acceptable index idx into an equivalent absolute 
+	index (that is, one that does not depend on the stack size)."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_close: L [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_close,
+	
+		void lua_close (lua_State *L);
+		
+	Close all active to-be-closed variables in the main thread, release all objects in 
+	the given Lua state (calling the corresponding garbage-collection metamethods, if any), 
+	and frees all dynamic memory used by this state.
+
+	On several platforms, you may not need to call this function, because all resources are
+	naturally released when the host program ends. On the other hand, long-running programs 
+	that create multiple states, such as daemons or web servers, will probably need to close 
+	states as soon as they are not needed."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_compare_le: L index: index1 anotherIndex: index2 [
+
+	^ self
+		  lua: L
+		  compare: index1
+		  another: index2
+		  operator: self LUA_OPLE
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_compare_lt: L index: index1 anotherIndex: index2 [
+
+	^ self
+		  lua: L
+		  compare: index1
+		  another: index2
+		  operator: self LUA_OPLT
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_pcall: L nargs: nargs lets: names [
+
+	| flag |
+	flag := self lua_pcall: L nargs: nargs nresults: names size.
+
+	flag = self LUA_OK ifTrue: [ 
+		names reverseDo: [ :var | self lua: L setglobal: var asString ] ].
+
+	^ flag
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_pcall: L nargs: nargs nresults: nresults [
+
+	^ self
+		  lua: L
+		  pcallArgumentsSize: nargs
+		  resultsSize: nresults
+		  msgh: 0
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_pcall: L valueWithArguments: args lets: names [
+
+	args do: [ :arg | self on: L push: arg ].
+
+	^ self lua_pcall: L nargs: args size lets: names
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_tointeger: L at: index [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_tointeger,
+	
+		lua_Integer lua_tointeger (lua_State *L, int index);
+		
+	Equivalent to lua_tointegerx with isnum equal to NULL."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_tonumberx: L at: idx isnumpointer: isnum [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_tonumberx,
+	
+		lua_Number lua_tonumberx (lua_State *L, int index, int *isnum);
+
+	Converts the Lua value at the given index to the C type lua_Number (see lua_Number). 
+	The Lua value must be a number or a string convertible to a number (see §3.4.3); 
+	otherwise, lua_tonumberx returns 0.
+
+	If isnum is not NULL, its referent is assigned a boolean value that indicates whether 
+	the operation succeeded."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_typename: L at: i [
+	"From https://www.lua.org/manual/5.4/manual.html#luaL_typename,
+	
+		int luaL_typeerror (lua_State *L, int arg, const char *tname);
+		
+	Raises a type error for the argument arg of the C function that called it, 
+	using a standard message; tname is a ""name"" for the expected type. This 
+	function never returns."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API' }
+LibLuaAbstractImplementation >> on: state assertLUAOK: aBlock [
+
+	(aBlock cull: self) = self LUA_OK ifFalse: [
+		self assert: false description: (self on: state at: -1) ]
+]
+
+{ #category : 'API' }
+LibLuaAbstractImplementation >> on: state at: i [
+
+	^ self on: state at: i cache: IdentityDictionary new
+]
+
+{ #category : 'API' }
+LibLuaAbstractImplementation >> on: state at: i cache: cache [
+
+	| pointerAsInteger |
+	pointerAsInteger := (self lua_topointer: state at: i) asInteger.
+
+	^ pointerAsInteger = 0
+		  ifTrue: [ self _on: state at: i cache: cache ]
+		  ifFalse: [ 
+			  | witness obj |
+			  witness := Object new.
+			  obj := cache at: pointerAsInteger ifAbsentPut: [ witness ].
+
+			  obj == witness
+				  ifTrue: [ 
+					  | reified |
+					  reified := self _on: state at: i cache: cache.
+					  witness become: reified.
+					  witness ]
+				  ifFalse: [ obj "easy case: already seen so return it." ] ]
+]
+
+{ #category : 'API' }
+LibLuaAbstractImplementation >> on: state push: anObject [
+
+	^ anObject pushOnLua: state liblua: self
+]
+
+{ #category : 'API' }
+LibLuaAbstractImplementation >> table: L at: idx do: aBlock [
+
+	"A typical table traversal looks like this:
+
+     /* table is in the stack at index 't' */
+     lua_pushnil(L);  /* first key */
+     while (lua_next(L, t) != 0) {
+       /* uses 'key' (at index -2) and 'value' (at index -1) */
+       printf(""%s - %s\n"",
+              lua_typename(L, lua_type(L, -2)),
+              lua_typename(L, lua_type(L, -1)));
+       /* removes 'value'; keeps 'key' for next iteration */
+       lua_pop(L, 1);
+     }
+	"
+
+	| index |
+	self lua_pushnil: L.
+
+	index := idx negative
+		         ifTrue: [ idx - 1 ]
+		         ifFalse: [ idx ].
+
+	[ (self lua: L next: index) = 0 ] whileFalse: [ 
+		aBlock value: -2 value: -1.
+
+		self lua: L pop: 1 ]
+]
+
+{ #category : 'API' }
+LibLuaAbstractImplementation >> withOpenedLibsStateDo: aBlock [
+
+	^ self withStateDo: [ :state | 
+		  self luaL_openlibs: state.
+		  aBlock value: state ]
+]
+
+{ #category : 'API' }
+LibLuaAbstractImplementation >> withStateDo: aBlock [
+
+	| state |
+	state := self luaLnewstate.
+
+	^ [ aBlock value: state ] ensure: [ self lua_close: state ]
 ]
