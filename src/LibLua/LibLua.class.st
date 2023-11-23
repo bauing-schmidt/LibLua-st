@@ -22,6 +22,18 @@ LibLua class >> initialize [
 	implementationPrimitive := LibLuaPrimitiveImplementation new
 ]
 
+{ #category : 'creating' }
+LibLua class >> uniqueInstanceFFI [
+
+	^ self uniqueInstance implementationFFI
+]
+
+{ #category : 'creating' }
+LibLua class >> uniqueInstancePrimitive [
+
+	^ self uniqueInstance implementationPrimitive
+]
+
 { #category : 'API' }
 LibLua >> do: aBlock [
 
