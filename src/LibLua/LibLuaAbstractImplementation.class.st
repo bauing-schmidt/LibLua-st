@@ -935,6 +935,59 @@ LibLuaAbstractImplementation >> lua: L typename: tp [
 ]
 
 { #category : 'API - C' }
+LibLuaAbstractImplementation >> luaL: L check: arg lstring: l [
+	"From https://www.lua.org/manual/5.4/manual.html#luaL_checklstring,
+	
+		const char *luaL_checklstring (lua_State *L, int arg, size_t *l);
+	
+	Checks whether the function argument arg is a string and returns this string; 
+	if l is not NULL fills its referent with the string's length.
+
+	This function uses lua_tolstring to get its result, so all conversions and 
+	caveats of that function apply here."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> luaL: L check: arg type: t [
+	"From https://www.lua.org/manual/5.4/manual.html#luaL_checktype,
+	
+		void luaL_checktype (lua_State *L, int arg, int t)
+		
+	Checks whether the function argument arg has type t. 
+	See lua_type for the encoding of types for t."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> luaL: L checknumber: arg [
+	"From https://www.lua.org/manual/5.4/manual.html#luaL_checknumber,
+	
+		lua_Number luaL_checknumber (lua_State *L, int arg);
+
+	Checks whether the function argument arg is a number and returns 
+	this number converted to a lua_Number. "
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> luaL: L checkstring: arg [
+
+	"From https://www.lua.org/manual/5.4/manual.html#luaL_checkstring,
+	
+		const char *luaL_checkstring (lua_State *L, int arg);
+	
+	Checks whether the function argument arg is a string and returns this string.
+
+	This function uses lua_tolstring to get its result, so all conversions and caveats of that function apply here."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
 LibLuaAbstractImplementation >> luaL: L dostring: s [
 
 	"From https://www.lua.org/manual/5.4/manual.html#luaL_dostring,
@@ -946,6 +999,37 @@ LibLuaAbstractImplementation >> luaL: L dostring: s [
      (luaL_loadstring(L, str) || lua_pcall(L, 0, LUA_MULTRET, 0))
 
 	It returns LUA_OK if there are no errors, or an error code in case of errors (see §4.4.1)."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> luaL: L loadfile: filename [
+
+	"From https://www.lua.org/manual/5.4/manual.html#luaL_loadfile,
+	
+		int luaL_loadfile (lua_State *L, const char *filename);
+	
+	Equivalent to luaL_loadfilex with mode equal to NULL."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> luaL: L loadfile: filename x: mode [
+	"From https://www.lua.org/manual/5.4/manual.html#luaL_loadfilex,
+	
+		int luaL_loadfilex (lua_State *L, const char *filename, const char *mode);
+	
+	Loads a file as a Lua chunk. This function uses lua_load to load the chunk in the 
+	file named filename. If filename is NULL, then it loads from the standard input. 
+	The first line in the file is ignored if it starts with a #.
+
+	The string mode works as in the function lua_load.
+
+	This function returns the same results as lua_load or LUA_ERRFILE for file-related errors.
+
+	As lua_load, this function only loads the chunk; it does not run it."
 
 	self subclassResponsibility
 ]
@@ -981,6 +1065,23 @@ LibLuaAbstractImplementation >> luaL_openlibs: L [
 LibLuaAbstractImplementation >> luaL_requiref: L name: modname [
 
 	^ self luaL_requiref: L name: modname let: modname
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> luaL_requiref: L name: modname function: openf global: glb [
+	"From https://www.lua.org/manual/5.4/manual.html#luaL_requiref,
+	
+		void luaL_requiref (lua_State *L, const char *modname, lua_CFunction openf, int glb);
+	
+	If package.loaded[modname] is not true, calls the function openf with the 
+	string modname as an argument and sets the call result to package.loaded[modname], 
+	as if that function has been called through require.
+
+	If glb is true, also stores the module into the global modname.
+
+	Leaves a copy of the module on the stack."
+
+	self subclassResponsibility
 ]
 
 { #category : 'API - auxiliary' }
@@ -1084,6 +1185,71 @@ LibLuaAbstractImplementation >> lua_compare_lt: L index: index1 anotherIndex: in
 ]
 
 { #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_createtable: L narr: narr nrec: nrec [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_createtable,
+	
+		void lua_createtable (lua_State *L, int narr, int nrec);
+	
+	Creates a new empty table and pushes it onto the stack. Parameter narr is a hint 
+	for how many elements the table will have as a sequence; parameter nrec is a hint 
+	for how many other elements the table will have. Lua may use these hints to preallocate 
+	memory for the new table. This preallocation may help performance when you know 
+	in advance how many elements the table will have. Otherwise you can use the function `#lua_newtable:`."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_error: L [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_error,
+	
+		int lua_error (lua_State *L);
+
+	Raises a Lua error, using the value on the top of the stack as 
+	the error object. This function does a long jump, and therefore 
+	never returns (see luaL_error)."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_gettop: L [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_gettop,
+	
+		int lua_gettop (lua_State *L);
+		
+	Returns the index of the top element in the stack. Because indices start at 1, 
+	this result is equal to the number of elements in the stack; 
+	in particular, 0 means an empty stack."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_isnil: L at: index [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_isnil,
+	
+		int lua_isnil (lua_State *L, int index);
+
+	Returns 1 if the value at the given index is nil, and 0 otherwise."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_newtable: L [
+
+	"From https://www.lua.org/manual/5.4/manual.html#lua_newtable,
+	
+		void lua_newtable (lua_State *L);
+		
+	Creates a new empty table and pushes it onto the stack. 
+	It is equivalent to lua_createtable(L, 0, 0)."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
 LibLuaAbstractImplementation >> lua_pcall: L nargs: nargs lets: names [
 
 	| flag |
@@ -1114,6 +1280,95 @@ LibLuaAbstractImplementation >> lua_pcall: L valueWithArguments: args lets: name
 ]
 
 { #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_pcallk: L nargs: nargs nresults: nresults msgh: msgh ctx: ctx k: k [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_pcallk,
+	
+		int lua_pcallk (lua_State *L,
+  		                int nargs,
+      			          int nresults,
+         			       int msgh,
+            			    lua_KContext ctx,
+               			 lua_KFunction k);
+			
+	This function behaves exactly like #lua_pcall:, except that it allows the called function to yield 
+	(see https://www.lua.org/manual/5.4/manual.html#4.5)."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_pushlightuserdata: L externalAddress: p [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_pushlightuserdata,
+	
+		void lua_pushlightuserdata (lua_State *L, void *p);
+
+	Pushes a light userdata onto the stack.
+
+	Userdata represent C values in Lua. A light userdata represents a pointer, a void*. 
+	It is a value (like a number): you do not create it, it has no individual metatable, 
+	and it is not collected (as it was never created). A light userdata is equal to ""any"" 
+	light userdata with the same C address."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_pushnil: L [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_pushnil,
+	
+		void lua_pushnil (lua_State *L);
+
+	Pushes a nil value onto the stack. "
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_remove: L at: idx [
+
+	"From https://www.lua.org/manual/5.4/manual.html#lua_remove,
+	
+		void lua_remove (lua_State *L, int index);
+	
+	Removes the element at the given valid index, shifting down the 
+	elements above this index to fill the gap. This function cannot be 
+	called with a pseudo-index, because a pseudo-index is not an actual 
+	stack position."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_rotate: L at: idx positions: n [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_rotate,
+	
+		void lua_rotate (lua_State *L, int idx, int n);
+	
+	Rotates the stack elements between the valid index idx and the top of the stack. 
+	The elements are rotated n positions in the direction of the top, for a positive n, 
+	or -n positions in the direction of the bottom, for a negative n. The absolute value 
+	of n must not be greater than the size of the slice being rotated. This function 
+	cannot be called with a pseudo-index, because a pseudo-index is not an actual stack position."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_settop: L at: idx [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_settop,
+	
+		void lua_settop (lua_State *L, int idx);
+		
+	Accepts any index, or 0, and sets the stack top to this index. If the new top is 
+	greater than the old one, then the new elements are filled with nil. If index is 0, 
+	then all stack elements are removed.
+
+	This function can run arbitrary code when removing an index marked as to-be-closed from the stack."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
 LibLuaAbstractImplementation >> lua_tointeger: L at: index [
 	"From https://www.lua.org/manual/5.4/manual.html#lua_tointeger,
 	
@@ -1136,6 +1391,35 @@ LibLuaAbstractImplementation >> lua_tonumberx: L at: idx isnumpointer: isnum [
 
 	If isnum is not NULL, its referent is assigned a boolean value that indicates whether 
 	the operation succeeded."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_topointer: L at: idx [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_topointer,
+
+		const void *lua_topointer (lua_State *L, int index);
+		
+	Converts the value at the given index to a generic C pointer (void*). 
+	The value can be a userdata, a table, a thread, a string, or a function; 
+	otherwise, lua_topointer returns NULL. Different objects will give different 
+	pointers. There is no way to convert the pointer back to its original value.
+
+	Typically this function is used only for hashing and debug information."
+
+	self subclassResponsibility
+]
+
+{ #category : 'API - C' }
+LibLuaAbstractImplementation >> lua_touserdata: L at: index [
+	"From https://www.lua.org/manual/5.4/manual.html#lua_touserdata,
+	
+		void *lua_touserdata (lua_State *L, int index);
+	
+	If the value at the given index is a full userdata, returns its 
+	memory-block address. If the value is a light userdata, returns 
+	its value (a pointer). Otherwise, returns NULL."
 
 	self subclassResponsibility
 ]
