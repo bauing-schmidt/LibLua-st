@@ -664,13 +664,41 @@ LibLuaTest >> testReadFromBoolean [
 { #category : 'tests' }
 LibLuaTest >> testReadFromInteger [
 
-	self liblua withOpenedLibsStateDo: [ :state | 
+	self liblua withOpenedLibsStateDo: [ :state |
 		| result |
 		result := self liblua
 			          luaL: state loadstring: 'return 12345';
 			          lua_pcall: state nargs: 0 nresults: 1;
 			          on: state at: -1.
-		self assert: result equals: 12345 ]
+		self assert: result equals: 12345.
+
+		result := self liblua
+			          luaL: state loadstring: 'return (1 << 60) - 1';
+			          lua_pcall: state nargs: 0 nresults: 1;
+			          on: state at: -1.
+		self assert: result equals: SmallInteger maxVal.
+
+		result := self liblua
+			          luaL: state
+			          dostring: 'm = math.maxinteger; s = tostring(m)';
+			          on: state push: #m;
+			          on: state push: #s.
+		self
+			assert: (self liblua on: state at: -2) equals: 1 << 63 - 1;
+			assert: (self liblua on: state at: -1)
+			equals: '9223372036854775807'.
+
+		result := self liblua
+			          luaL: state dostring: 'm = math.mininteger; print(m)';
+			          on: state push: #m;
+			          on: state at: -1.
+		self assert: result equals: (1 << 63) negated.
+
+		result := self liblua
+			          luaL: state loadstring: 'return (1 << 60)';
+			          lua_pcall: state nargs: 0 nresults: 1;
+			          on: state at: -1.
+		self assert: result equals: SmallInteger maxVal + 1 ]
 ]
 
 { #category : 'tests' }
@@ -816,4 +844,55 @@ LibLuaTest >> testTableMap [
 			        lua: state tostring: -1 ].
 
 	self assert: list equals: '6, 5, 4, 3, 2'
+]
+
+{ #category : 'tests' }
+LibLuaTest >> test_lua_tointegerx [
+
+	self liblua withOpenedLibsStateDo: [ :state |
+		| orig witness |
+		witness := 42.
+		orig := self liblua
+			        on: state push: witness;
+			        lua: state tointegerx: -1 ifNotInteger: [ self fail ].
+		self assert: orig equals: witness.
+
+		witness := 'hello'.
+		orig := self liblua
+			        on: state push: witness;
+			        lua: state tointegerx: -1 ifNotInteger: [ witness ].
+		self assert: orig equals: witness ]
+]
+
+{ #category : 'tests' }
+LibLuaTest >> test_lua_tolstring [
+
+	self liblua withOpenedLibsStateDo: [ :state |
+		| orig |
+		orig := String loremIpsum.
+
+		self liblua
+			on: state push: orig;
+			lua: state tolstring: -1 do: [ :str :size |
+				self
+					assert: str equals: orig;
+					assert: size equals: orig size ] ]
+]
+
+{ #category : 'tests' }
+LibLuaTest >> test_lua_tonumberx [
+
+	self liblua withOpenedLibsStateDo: [ :state |
+		| orig witness |
+		witness := 42.3.
+		orig := self liblua
+			        on: state push: witness;
+			        lua: state tonumberx: -1 ifNotNumber: [ self fail ].
+		self assert: orig equals: witness.
+
+		witness := 'hello'.
+		orig := self liblua
+			        on: state push: witness;
+			        lua: state tonumberx: -1 ifNotNumber: [ witness ].
+		self assert: orig equals: witness ]
 ]
