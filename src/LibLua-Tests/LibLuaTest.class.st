@@ -130,9 +130,8 @@ end
 { #category : 'tests' }
 LibLuaTest >> testCFunctionAverage [
 
-	| avg sum |
+	| avg sum average |
 	self liblua withOpenedLibsStateDo: [ :state |
-		| average |
 		average := self liblua fficallbackOnBlock: [ :s | self average: s ].
 
 		self liblua lua: state register: 'foo' cfunction: average.
@@ -179,12 +178,11 @@ LibLuaTest >> testCFunctionPCallCoroutine [
 { #category : 'tests' }
 LibLuaTest >> testCairoPango [
 
-	| ll |
+	| ll canvas code |
 	self skip.
 	ll := self liblua.
 
 	ll withOpenedLibsStateDo: [ :L |
-		| canvas code |
 		ll luaL_requiref: L name: 'cairo'.
 
 		ll
@@ -278,7 +276,7 @@ LibLuaTest >> testCommandsUsingLuaDefsReadingTableBack [
 { #category : 'tests' }
 LibLuaTest >> testCommandsUsingLuaDefsTableDo [
 
-	| result |
+	| result keyType valueType |
 	result := OrderedCollection new.
 
 	self liblua withOpenedLibsStateDo: [ :state | 
@@ -287,7 +285,6 @@ LibLuaTest >> testCommandsUsingLuaDefsTableDo [
 			luaL: state dostring: self commandsLuaSource;
 			lua: state getglobal: 'commands';
 			table: state at: -1 do: [ :k :v | 
-				| keyType valueType |
 				keyType := self liblua
 					           lua: state
 					           typename: (self liblua lua: state type: k).
@@ -305,7 +302,7 @@ LibLuaTest >> testCommandsUsingLuaDefsTableDo [
 { #category : 'tests' }
 LibLuaTest >> testCopy [
 
-	| result original |
+	| result original keyType valueType |
 	result := Set new.
 	original := Set new.
 
@@ -317,7 +314,6 @@ LibLuaTest >> testCopy [
 			lua_pushnil: state;
 			lua: state copy: -2 to: -1;
 			table: state at: -1 do: [ :k :v | 
-				| keyType valueType |
 				keyType := self liblua
 					           lua: state
 					           typename: (self liblua lua: state type: k).
@@ -326,7 +322,6 @@ LibLuaTest >> testCopy [
 					             typename: (self liblua lua: state type: v).
 				result add: keyType -> valueType ];
 			table: state at: -2 do: [ :k :v | 
-				| keyType valueType |
 				keyType := self liblua
 					           lua: state
 					           typename: (self liblua lua: state type: k).
@@ -382,9 +377,9 @@ LibLuaTest >> testDictionary [
 
 { #category : 'tests' }
 LibLuaTest >> testGetGlobal_ENV [
+	| tbl |
 
 	self liblua withOpenedLibsStateDo: [ :state | 
-		| tbl |
 		self liblua assert: [ :ll | 
 			ll
 				luaL: state
@@ -404,9 +399,9 @@ LibLuaTest >> testGetGlobal_ENV [
 
 { #category : 'tests' }
 LibLuaTest >> testGetInfoPrint [
+	| tbl |
 
 	self liblua withOpenedLibsStateDo: [ :state | 
-		| tbl |
 		self liblua assert: [ :ll | 
 			ll
 				luaL: state
@@ -791,12 +786,12 @@ LibLuaTest >> testRecursiveTables [
 { #category : 'tests' }
 LibLuaTest >> testSetGlobalMySinAsCallback [
 
-	| code result called |
+	| code result called number |
+
 	called := false.
 
 	self liblua withOpenedLibsStateDo: [ :state | 
 		self liblua on: state push: [ :ongoingState | 
-			| number |
 			called := true.
 			self assert: ongoingState equals: state.
 
@@ -848,9 +843,9 @@ LibLuaTest >> testTableMap [
 
 { #category : 'tests' }
 LibLuaTest >> test_lua_tointegerx [
+	| orig witness |
 
 	self liblua withOpenedLibsStateDo: [ :state |
-		| orig witness |
 		witness := 42.
 		orig := self liblua
 			        on: state push: witness;
@@ -866,9 +861,9 @@ LibLuaTest >> test_lua_tointegerx [
 
 { #category : 'tests' }
 LibLuaTest >> test_lua_tolstring [
+	| orig |
 
 	self liblua withOpenedLibsStateDo: [ :state |
-		| orig |
 		orig := String loremIpsum.
 
 		self liblua
@@ -881,9 +876,9 @@ LibLuaTest >> test_lua_tolstring [
 
 { #category : 'tests' }
 LibLuaTest >> test_lua_tonumberx [
+	| orig witness |
 
 	self liblua withOpenedLibsStateDo: [ :state |
-		| orig witness |
 		witness := 42.3.
 		orig := self liblua
 			        on: state push: witness;

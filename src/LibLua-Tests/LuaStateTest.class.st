@@ -115,9 +115,8 @@ end
 { #category : 'tests' }
 LuaStateTest >> testCFunctionAverage [
 
-	| avg sum |
-	self liblua do: [ :lua | 
-		| average |
+	| avg sum average|
+	self liblua executeWithState: [ :lua | 
 		average := lua on: #foo do: [ :s | self averageAndSum: s  ].
 		
 		"We push here some values on the stack to test the behaviour of #lua_gettop: 
@@ -142,9 +141,9 @@ LuaStateTest >> testCFunctionAverage [
 LuaStateTest >> testCFunctionPCallCoroutine [
 
 	| s e |
-	self liblua do: [ :lua | 
+	self liblua executeWithState: [ :lua | 
 		lua
-			do: 'co = coroutine.create(function (...) print(pcall(coroutine.yield, ...)) end)';
+			doString: 'co = coroutine.create(function (...) print(pcall(coroutine.yield, ...)) end)';
 			executePushingTwo: 'return coroutine.resume(co, "hello")'.
 			
 		s := lua booleanAt: -2.
@@ -167,7 +166,7 @@ LuaStateTest >> testCommandsUsingLuaAPI [
 		     key: 0.0;
 		     yourself.
 
-	result := self liblua do: [ :lua | 
+	result := self liblua executeWithState: [ :lua | 
 		          lua
 			          push: [ :ongoingState | 
 				          self
@@ -175,8 +174,8 @@ LuaStateTest >> testCommandsUsingLuaAPI [
 					          random: random
 					          acc: r ];
 			          setGlobal: 'command';
-			          do: self recSumLuaSource;
-			          do: self commandsLuaSource;
+			          doString: self recSumLuaSource;
+			          doString: self commandsLuaSource;
 			          executePushingOne: 'return recSum(commands)';
 			          numberAt: -1 ifNotNumber: [ Error signal ] ].
 
@@ -187,11 +186,11 @@ LuaStateTest >> testCommandsUsingLuaAPI [
 LuaStateTest >> testCommandsUsingLuaDefs [
 
 	| result |
-	result := self liblua do: [ :lua | 
+	result := self liblua executeWithState: [ :lua | 
 		          lua
-			          do: self commandDefLuaSource;
-			          do: self recSumLuaSource;
-			          do: self commandsLuaSource;
+			          doString: self commandDefLuaSource;
+			          doString: self recSumLuaSource;
+			          doString: self commandsLuaSource;
 			          executePushingOne: 'return recSum(commands)';
 			          integerAt: -1 ifNotInteger: [ Error signal ] ].
 
@@ -202,10 +201,10 @@ LuaStateTest >> testCommandsUsingLuaDefs [
 LuaStateTest >> testCommandsUsingLuaDefsReadingTableBack [
 
 	| result |
-	result := self liblua do: [ :lua | 
+	result := self liblua executeWithState: [ :lua | 
 		          lua
-			          do: self commandDefLuaSource;
-			          do: self commandsLuaSource;
+			          doString: self commandDefLuaSource;
+			          doString: self commandsLuaSource;
 			          getGlobal: 'commands';
 			          getFieldAt: 1 ofValueAt: -1;
 						 getField: 'name' ofValueAt: -1;
@@ -220,10 +219,10 @@ LuaStateTest >> testCommandsUsingLuaDefsTableDo [
 	| result |
 	result := OrderedCollection new.
 
-	self liblua do: [ :lua | 
+	self liblua executeWithState: [ :lua | 
 		lua
-			do: self commandDefLuaSource;
-			do: self commandsLuaSource;
+			doString: self commandDefLuaSource;
+			doString: self commandsLuaSource;
 			getGlobal: 'commands';
 			tableAt: -1 do: [ :k :v | 
 				| keyType valueType |
@@ -244,10 +243,10 @@ LuaStateTest >> testCopy [
 	result := Set new.
 	original := Set new.
 
-	self liblua do: [ :lua | 
+	self liblua executeWithState: [ :lua | 
 		lua
-			do: 'tbl = { hello = 3.14, "!" }';
-			do: 'tbl[ { } ] = 2';
+			doString: 'tbl = { hello = 3.14, "!" }';
+			doString: 'tbl[ { } ] = 2';
 			getGlobal: 'tbl';
 			pushNil;
 			copyFrom: -2 to: -1;
@@ -276,9 +275,9 @@ LuaStateTest >> testCopy [
 LuaStateTest >> testCopyCompare [
 
 	| outer inner |
-	self liblua do: [ :lua | 
+	self liblua executeWithState: [ :lua | 
 		outer := lua 
-			do: 'tbl = { nested = { } }';
+			doString: 'tbl = { nested = { } }';
 			getGlobal: 'tbl';
 			pushNil;
 			copyFrom: -2 to: -1;
@@ -298,7 +297,7 @@ LuaStateTest >> testCopyCompare [
 LuaStateTest >> testLoadThenPCall [
 
 	| code |
-	self liblua do: [ :lua | 
+	self liblua executeWithState: [ :lua | 
 		code := lua executePushingNone: 'do a = 3 + 4; print("The result is: ", a) end'.
 	].
 
@@ -309,7 +308,7 @@ LuaStateTest >> testLoadThenPCall [
 LuaStateTest >> testLoadThenPCallThenToString [
 
 	| code error |
-	self liblua do: [ :lua | 
+	self liblua executeWithState: [ :lua | 
 		code := lua executePushingNone: '(function (a, b) return error("hello") end) (3, 4)'.
 		error := lua stringAt: -1
 	].
@@ -325,7 +324,7 @@ LuaStateTest >> testLoadThenPCallThenToString [
 LuaStateTest >> testLoadThenPCallWithReturnInteger [
 
 	| code seven |
-	self liblua do: [ :lua | 
+	self liblua executeWithState: [ :lua | 
 		code := lua executePushingOne: 'do a = 3 + 4; print("The result is: ", a); return a + 1 end'.
 		seven := lua integerAt: -1 ifNotInteger: [ Error signal ].
 	].
@@ -341,7 +340,7 @@ LuaStateTest >> testLoadThenPCallWithReturnIntegerFail [
 	| code seven witness |
 	witness := Object new.
 
-	self liblua do: [ :lua | 
+	self liblua executeWithState: [ :lua | 
 		code := lua executePushingOne: 'do a = 3 + 4; print("The result is: ", a); return "just a simple string" end'.
 		seven := lua integerAt: -1 ifNotInteger: [ witness ].
 	].
@@ -356,7 +355,7 @@ LuaStateTest >> testLoadThenPCallWithReturnIntegerInString [
 
 	| code seven |
 
-	self liblua do: [ :lua | 
+	self liblua executeWithState: [ :lua | 
 		code := lua executePushingOne: 'do a = 3 + 4; print("The result is: ", a); return tostring(a + 1) end'.
 		seven := lua integerAt: -1 ifNotInteger: [ Error signal ].
 	].
@@ -371,7 +370,7 @@ LuaStateTest >> testLoadThenPCallWithReturnNumber [
 
 	| code seven |
 
-	self liblua do: [ :lua | 
+	self liblua executeWithState: [ :lua | 
 		code := lua executePushingOne: 'do a = 3 + 4.2; print("The result is: ", a); return a + 1 end'.
 		seven := lua numberAt: -1 ifNotNumber: [ Error signal ].
 	].
@@ -387,7 +386,7 @@ LuaStateTest >> testLoadThenPCallWithReturnNumberFail [
 	| code seven witness |
 	witness := Object new.
 
-	self liblua do: [ :lua | 
+	self liblua executeWithState: [ :lua | 
 		code := lua executePushingOne: 'do a = 3 + 4; print("The result is: ", a); return "just a simple string" end'.
 		seven := lua numberAt: -1 ifNotNumber: [ witness ].
 	].
@@ -402,7 +401,7 @@ LuaStateTest >> testLoadThenPCallWithReturnString [
 
 	| code seven |
 
-	self liblua do: [ :lua | 
+	self liblua executeWithState: [ :lua | 
 		code := lua executePushingOne: 'do a = 3 + 4; print("The result is: ", a); return tostring(a) .. " hello " end'.
 		seven := lua stringAt: -1.
 	].
@@ -419,7 +418,7 @@ LuaStateTest >> testLuaSeti [
 	random := Random seed: 541.
 	array := (1 to: 100) asArray shuffleBy: random.
 
-	list := self liblua do: [ :lua | 
+	list := self liblua executeWithState: [ :lua | 
 			lua addGlobal: array as: 'array'.
 			lua executePushingOne: 'return  table.concat(array, " ")'.
 			lua stringAt: -1. ].
@@ -431,7 +430,7 @@ LuaStateTest >> testLuaSeti [
 LuaStateTest >> testNewCloseState [
 
 	| three |
-	three := self liblua do: [ :lua | 
+	three := self liblua executeWithState: [ :lua | 
 		         self deny: lua externalAddress equals: ExternalAddress null.
 		         3 ].
 
@@ -440,9 +439,9 @@ LuaStateTest >> testNewCloseState [
 
 { #category : 'tests' }
 LuaStateTest >> testReadFromArray [
+	| result |
 
-	self liblua do: [ :lua | 
-		| result |
+	self liblua executeWithState: [ :lua | 
 		result := lua execute: 'return {1, 2, 3, 4, 5}'.
 		self assert: result equals: #( 1 2 3 4 5 ).
 
@@ -462,9 +461,9 @@ LuaStateTest >> testReadFromArray [
 
 { #category : 'tests' }
 LuaStateTest >> testReadFromBoolean [
+	| result |
 
-	self liblua do: [ :lua | 
-		| result |
+	self liblua executeWithState: [ :lua | 
 		result := lua execute: 'return false'.
 		self deny: result.
 
@@ -475,9 +474,9 @@ LuaStateTest >> testReadFromBoolean [
 
 { #category : 'tests' }
 LuaStateTest >> testReadFromInteger [
+	| result |
 
-	self liblua do: [ :lua | 
-		| result |
+	self liblua executeWithState: [ :lua | 
 		result := lua execute: 'return 12345'.
 		self assert: result equals: 12345
 	]
@@ -485,9 +484,9 @@ LuaStateTest >> testReadFromInteger [
 
 { #category : 'tests' }
 LuaStateTest >> testReadFromNil [
+	| result |
 
-	self liblua do: [ :lua | 
-		| result |
+	self liblua executeWithState: [ :lua | 
 		result := lua execute: 'return nil'.
 		self assert: result equals: nil
 	]
@@ -495,9 +494,9 @@ LuaStateTest >> testReadFromNil [
 
 { #category : 'tests' }
 LuaStateTest >> testReadFromNumber [
+	| result |
 
-	self liblua do: [ :lua | 
-		| result |
+	self liblua executeWithState: [ :lua | 
 		result := lua execute: 'return 12345.1'.
 		self assert: result equals: 12345.1
 	]
@@ -505,9 +504,9 @@ LuaStateTest >> testReadFromNumber [
 
 { #category : 'tests' }
 LuaStateTest >> testReadFromString [
+	| result |
 
-	self liblua do: [ :lua | 
-		| result |
+	self liblua executeWithState: [ :lua | 
 		result := lua execute: 'return "nil"'.
 		self assert: result equals: 'nil'
 	]
@@ -515,13 +514,13 @@ LuaStateTest >> testReadFromString [
 
 { #category : 'tests' }
 LuaStateTest >> testReadFromTable [
+	| result |
 
-	self liblua do: [ :lua | 
-		| result |
+	self liblua executeWithState: [ :lua | 
 		result := lua 
-			do: 'tbl = {1, 4}';
-			do: 'tbl[{}] = "hello"';
-			do: 'tbl[true] = { 1 }';
+			doString: 'tbl = {1, 4}';
+			doString: 'tbl[{}] = "hello"';
+			doString: 'tbl[true] = { 1 }';
 			execute: 'return tbl'.
 		self assert: result equals: (Dictionary new
 				 at: 1 put: 1;
@@ -534,13 +533,13 @@ LuaStateTest >> testReadFromTable [
 { #category : 'tests' }
 LuaStateTest >> testSetGlobalMySinAsCallback [
 
-	| code result called |
+	| code result called number |
+
 	called := false.
 
-	self liblua do: [ :lua |
+	self liblua executeWithState: [ :lua |
 		lua
 			addGlobal: [ :ongoingState |
-				| number |
 				called := true.
 				self assert: ongoingState equals: lua externalAddress.
 

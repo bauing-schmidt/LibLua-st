@@ -44,7 +44,7 @@ LuaState >> copyFrom: fromIndex to: toIndex [
 ]
 
 { #category : 'accessing' }
-LuaState >> do: aString [
+LuaState >> doString: aString [
 
 	^ self liblua luaL: self externalAddress dostring: aString
 ]

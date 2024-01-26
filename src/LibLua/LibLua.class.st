@@ -35,7 +35,7 @@ LibLua class >> uniqueInstancePrimitive [
 ]
 
 { #category : 'API' }
-LibLua >> do: aBlock [
+LibLua >> executeWithState: aBlock [
 
 	| impl |
 	impl := self implementationPrimitive.
